@@ -93,10 +93,13 @@ def create_backup(include_audio=True, include_config=True):
 def restore_backup(backup_file, overwrite=False):
     """Restore configuration and audio files from a backup"""
     try:
-        # Check if backup file exists
-        if not os.path.exists(backup_file):
-            print(f"Backup file not found: {backup_file}")
-            return False
+        # Check if backup file exists, try both direct path and in backups directory
+        backup_path = backup_file
+        if not os.path.exists(backup_path):
+            backup_path = os.path.join("backups", backup_file)
+            if not os.path.exists(backup_path):
+                print(f"Backup file not found: {backup_file}")
+                return False
         
         # Create temporary directory
         temp_dir = "temp_restore"
