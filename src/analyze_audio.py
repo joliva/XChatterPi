@@ -131,7 +131,7 @@ def analyze_audio(filename, filtered=False):
 
 def main():
     parser = argparse.ArgumentParser(description='Analyze audio files for Chatter Pi')
-    parser.add_argument('filename', help='Audio file to analyze')
+    parser.add_argument('filename', help='Audio file to analyze', nargs='?')
     parser.add_argument('-f', '--filtered', action='store_true', 
                         help='Apply bandpass filter before analysis')
     parser.add_argument('-a', '--all', action='store_true',
@@ -141,16 +141,32 @@ def main():
     
     if args.all:
         # Analyze all audio files in vocals and ambient directories
+        found_files = False
         for directory in ['vocals', 'ambient']:
             if os.path.exists(directory):
-                print(f"\nAnalyzing files in {directory} directory:")
-                for file in os.listdir(directory):
-                    if file.endswith('.wav'):
+                files = [f for f in os.listdir(directory) if f.endswith('.wav')]
+                if files:
+                    found_files = True
+                    print(f"\nAnalyzing files in {directory} directory:")
+                    for file in files:
                         filepath = os.path.join(directory, file)
                         analyze_audio(filepath, args.filtered)
-    else:
+        
+        if not found_files:
+            print("No .wav files found in vocals/ or ambient/ directories.")
+            print("Please create these directories and add .wav files to them.")
+            print("\nExample directory structure:")
+            print("  vocals/")
+            print("    v01.wav")
+            print("    v02.wav")
+            print("  ambient/")
+            print("    a01.wav")
+    elif args.filename:
         # Analyze single file
         analyze_audio(args.filename, args.filtered)
+    else:
+        parser.print_help()
+        print("\nError: Either provide a filename or use the --all flag")
 
 if __name__ == "__main__":
     main()
