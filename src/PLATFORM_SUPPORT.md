@@ -43,12 +43,14 @@ sudo bash src/install.sh
 - Requires the pigpio daemon to be running (`sudo systemctl start pigpiod`)
 - Needs physical connections to servo, PIR sensor, and LEDs as configured in config.ini
 - Supports all features of Chatter Pi including hardware control and audio playback
+- GUI control panel works with X11 desktop environment
 
 ### Linux
 - No physical hardware control
 - Simulates hardware interactions with console output
 - Full audio playback through system audio device
 - Supports microphone/line input for live audio processing
+- GUI control panel works with any desktop environment
 - Useful for testing audio processing and configuration
 
 ### macOS
@@ -56,6 +58,7 @@ sudo bash src/install.sh
 - Simulates hardware interactions with console output
 - Full audio playback through system audio device
 - Supports microphone/line input for live audio processing
+- GUI control panel works natively
 - Useful for testing audio processing and configuration
 
 ## Developing for New Platforms
@@ -66,6 +69,26 @@ To add support for a new platform:
 2. Implement the `PlatformHardware` class that inherits from `HardwareBase`
 3. Implement all required methods for hardware control
 4. Update the platform detection logic in `platforms/__init__.py` if needed
+
+## GUI Control Panel
+
+Chatter Pi includes a graphical control panel that works on all supported platforms:
+
+1. To launch the control panel with dependency checking:
+   ```
+   python3 src/run_control_panel.py
+   ```
+
+2. Or launch it directly:
+   ```
+   python3 src/controlPanel.py
+   ```
+
+The control panel allows you to:
+- Adjust servo settings
+- Configure audio thresholds
+- Set trigger options
+- Maximize audio volume
 
 ## Audio Device Support
 

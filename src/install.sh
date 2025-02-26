@@ -30,7 +30,7 @@ fi
 if [ "$PLATFORM" == "raspberry_pi" ]; then
     echo "Installing Raspberry Pi specific packages..."
     apt-get update
-    apt-get install -y python3-pip python3-numpy python3-scipy python3-matplotlib pigpio python3-pigpio portaudio19-dev
+    apt-get install -y python3-pip python3-numpy python3-scipy python3-matplotlib python3-tk pigpio python3-pigpio portaudio19-dev
     
     echo "Installing Python packages..."
     pip3 install pyaudio gpiozero
@@ -47,7 +47,7 @@ if [ "$PLATFORM" == "raspberry_pi" ]; then
 elif [ "$PLATFORM" == "linux" ]; then
     echo "Installing Linux packages..."
     apt-get update
-    apt-get install -y python3-pip python3-numpy python3-scipy python3-matplotlib portaudio19-dev
+    apt-get install -y python3-pip python3-numpy python3-scipy python3-matplotlib python3-tk portaudio19-dev
     
     echo "Installing Python packages..."
     pip3 install pyaudio
@@ -55,7 +55,7 @@ elif [ "$PLATFORM" == "linux" ]; then
 elif [ "$PLATFORM" == "macos" ]; then
     echo "Installing macOS packages..."
     if command -v brew &> /dev/null; then
-        brew install python3 numpy scipy portaudio
+        brew install python3 numpy scipy portaudio python-tk
     else
         echo "Homebrew not found. Please install Homebrew first: https://brew.sh/"
         echo "Then run this script again."

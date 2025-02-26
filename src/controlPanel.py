@@ -4,6 +4,7 @@ import sys
 import os
 import shutil
 import maxVol
+from platforms import get_platform
 
 class ConfigManager(tk.Toplevel): 
     def __init__(self, parent, configpath='config.ini', 
@@ -135,15 +136,34 @@ class ConfigManager(tk.Toplevel):
         self.build(new_parser_dict)
 
 if __name__ == '__main__':
-    path = 'ChatterPi/config.ini'
+    # Use the current directory for config file
+    config_path = 'config.ini'
+    old_config_path = 'oldconfig.ini'
+    
+    # Create the main window
     window = tk.Tk()
-    configuration = ConfigManager(window)
-    window.title("ChatterPi Control Panel")
+    
+    # Get platform information for window title
+    platform_name = get_platform().capitalize()
+    
+    # Create the configuration manager
+    configuration = ConfigManager(window, configpath=config_path, oldpath=old_config_path)
+    
+    # Set up the window
+    window.title(f"ChatterPi Control Panel ({platform_name})")
     window.columnconfigure(1, pad=10)
     window.columnconfigure(0, pad=10)
     window.columnconfigure(2, pad=10)
     window.rowconfigure(0, pad=10)
     window.rowconfigure(1, pad=10)
     window.rowconfigure(2, pad=10)
+    
+    # Center the window on screen
+    window.update_idletasks()
+    width = window.winfo_width()
+    height = window.winfo_height()
+    x = (window.winfo_screenwidth() // 2) - (width // 2)
+    y = (window.winfo_screenheight() // 2) - (height // 2)
+    window.geometry('{}x{}+{}+{}'.format(width, height, x, y))
     
     window.mainloop()
