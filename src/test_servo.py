@@ -11,6 +11,7 @@ import argparse
 import os
 import sys
 import importlib.util
+import configparser
 
 # Add the src directory to the path to find the config and platforms modules
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -20,8 +21,26 @@ from platforms import hardware
 
 def test_servo(mode="sweep", speed=1.0, min_angle=None, max_angle=None, servo_min=None, servo_max=None, pin=None):
     """Test the servo with different patterns"""
+    # Check if config.ini exists, if not create it from default
+    config_path = 'config.ini'
+    default_config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.ini.default')
+    
+    if not os.path.exists(config_path) and os.path.exists(default_config_path):
+        print(f"config.ini not found, creating from default template")
+        import shutil
+        shutil.copy2(default_config_path, config_path)
+    
     # Load config
-    c.update()
+    try:
+        c.update()
+    except KeyError:
+        print("Error loading config.ini, using default values")
+        # Set default values
+        c.SERVO_MIN = 1050
+        c.SERVO_MAX = 1250
+        c.MIN_ANGLE = 0
+        c.MAX_ANGLE = 90
+        c.JAW_PIN = 18
     
     # Override config with command line arguments if provided
     if min_angle is not None:

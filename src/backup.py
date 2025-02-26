@@ -25,11 +25,23 @@ def create_backup(include_audio=True, include_config=True):
         
         # Copy configuration files if requested
         if include_config:
-            if os.path.exists("config.ini"):
-                shutil.copy2("config.ini", backup_dir)
-                print(f"Backed up: config.ini")
-            else:
-                print("Warning: config.ini not found")
+            config_paths = ["config.ini", "src/config.ini"]
+            config_found = False
+            for config_path in config_paths:
+                if os.path.exists(config_path):
+                    shutil.copy2(config_path, backup_dir)
+                    print(f"Backed up: {config_path}")
+                    config_found = True
+                    break
+            
+            if not config_found:
+                # Create a default config file
+                default_config_path = "src/config.ini.default"
+                if os.path.exists(default_config_path):
+                    shutil.copy2(default_config_path, os.path.join(backup_dir, "config.ini"))
+                    print(f"Created default config.ini from template")
+                else:
+                    print("Warning: No config.ini found and no default template available")
         
         # Copy audio files if requested
         if include_audio:
