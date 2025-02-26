@@ -8,6 +8,13 @@ To use ChatterPi, you can either download the source code, install all the neces
 
 The image file is too large to put on GitHub. It's called chat.img.gz, and can be found at https://drive.google.com/drive/folders/1njfqegJImeXq-ZoW_yuY0TCJ0bTiwWCA?usp=sharing.
 
+## Quick Installation
+
+For a quick installation of dependencies, run:
+```bash
+sudo bash src/install.sh
+```
+
 # Introduction
 
 ChatterPi is a software package that turns a Raspberry Pi into an audio servo controller. In other words, the Pi outputs commands to control a servo based on the volume of the audio input. The input can be either stored audio files (in either mono or stereo .wav format) or from an external source, such as a microphone or line level input. One of the uses is to drive animatronic props, such as a skull or a talking bird.
@@ -37,4 +44,39 @@ ChaterPi includes the following features
 - GUI control panel for modifying the configuration parameters
 - Utility (via control panel) to maximize the volume of the audio files
 
-If you use ChatterPi, I'd live to hear about it. Post a comment on my blog: https://www.mcgurrin.info/robots/690/ and consider giving this package a star here on GitHub. Thanks!
+## Utilities
+
+ChatterPi now includes several utilities to help with setup and configuration:
+
+### Audio Analysis Tool
+Analyzes audio files to recommend threshold settings for jaw movement:
+```bash
+python3 src/analyze_audio.py src/vocals/v01.wav
+python3 src/analyze_audio.py --filtered src/ambient/a01.wav
+python3 src/analyze_audio.py --all  # Analyze all audio files
+```
+
+### Servo Test Utility
+Test and calibrate servo movement without playing audio:
+```bash
+python3 src/test_servo.py --mode sweep
+python3 src/test_servo.py --mode steps --speed 2.0
+python3 src/test_servo.py --mode position --min-angle 0 --max-angle 90
+```
+
+### Backup Utility
+Create and restore backups of your configuration and audio files:
+```bash
+python3 src/backup.py create        # Create a full backup
+python3 src/backup.py list          # List available backups
+python3 src/backup.py restore backup_20250226_123456.zip
+```
+
+## Documentation
+
+For more detailed information, see:
+- `src/README.md` - General documentation
+- `src/TECHNICAL.md` - Technical details about the code
+- `src/QUICKSTART.md` - Quick start guide
+
+If you use ChatterPi, I'd love to hear about it. Post a comment on my blog: https://www.mcgurrin.info/robots/690/ and consider giving this package a star here on GitHub. Thanks!
