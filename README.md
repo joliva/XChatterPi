@@ -51,8 +51,8 @@ ChatterPi now includes several utilities to help with setup and configuration:
 ### Audio Analysis Tool
 Analyzes audio files to recommend threshold settings for jaw movement:
 ```bash
-python3 src/analyze_audio.py src/vocals/v01.wav
-python3 src/analyze_audio.py --filtered src/ambient/a01.wav
+python3 src/analyze_audio.py vocals/v01.wav
+python3 src/analyze_audio.py --filtered ambient/a01.wav
 python3 src/analyze_audio.py --all  # Analyze all audio files
 ```
 

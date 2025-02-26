@@ -15,7 +15,7 @@
 - Check for ground loops or interference in your audio connections
 - Use the audio analysis tool to check your audio files:
   ```
-  python3 src/analyze_audio.py src/vocals/v01.wav
+  python3 src/analyze_audio.py vocals/v01.wav
   ```
 - Test your microphone/line input sensitivity:
   ```
@@ -58,7 +58,7 @@
 - Try different STYLE settings (0, 1, or 2)
 - Use the audio analysis tool to recommend threshold settings:
   ```
-  python3 src/analyze_audio.py --filtered src/vocals/v01.wav
+  python3 src/analyze_audio.py --filtered vocals/v01.wav
   ```
 
 ### Trigger Issues
