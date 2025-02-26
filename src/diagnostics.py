@@ -99,12 +99,14 @@ def main():
     print(f"  Python: {platform.python_version()}")
     print(f"  Architecture: {platform.machine()}")
     
-    # Check for Raspberry Pi
-    is_raspberry_pi = os.path.exists("/proc/device-tree/model") and "raspberry pi" in run_command("cat /proc/device-tree/model").lower()
-    print(f"  Raspberry Pi: {'Yes' if is_raspberry_pi else 'No'}")
-    if is_raspberry_pi:
-        print(f"  Model: {run_command('cat /proc/device-tree/model')}")
-        print(f"  Temperature: {run_command('vcgencmd measure_temp')}")
+    # Get platform information
+    from platforms import get_platform, hardware
+    platform_name = get_platform()
+    system_info = hardware.get_system_info()
+    
+    print(f"  Platform: {platform_name}")
+    for key, value in system_info.items():
+        print(f"  {key.title()}: {value}")
     print("")
     
     # Check required Python modules
@@ -123,15 +125,18 @@ def main():
         print(f"  {command}: {status}")
     print("")
     
-    # Check pigpio daemon
+    # Check required services
     print("Services:")
-    pigpio_status = run_command("systemctl is-active pigpiod")
-    print(f"  pigpiod: {pigpio_status}")
+    if platform_name == "raspberry_pi":
+        pigpio_status = "active" if hardware.is_service_running("pigpiod") else "inactive"
+        print(f"  pigpiod: {pigpio_status}")
+    else:
+        print(f"  No hardware services required for {platform_name}")
     print("")
     
     # Check audio devices
     print("Audio Devices:")
-    print(run_command("aplay -l | grep -v 'List of'"))
+    print(hardware.get_audio_devices())
     print("")
     
     # Check files and directories

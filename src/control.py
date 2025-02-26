@@ -4,22 +4,20 @@ Updated to fix bad calls to audio.play_audio Sat Dec 26 2020
 @author: Mike McGurrin
 """
 
-from gpiozero.pins.pigpio import PiGPIOFactory
-from gpiozero import Device, Button, DigitalOutputDevice
-Device.pin_factory = PiGPIOFactory()
-
 import time
 
 import config as c
 import tracks as t
 import audio
+from platforms import hardware
 
 tracks = t.Tracks()
 a = audio.AUDIO()
 
-pir = Button(c.PIR_PIN, pull_up=False)
-triggerOut = DigitalOutputDevice(c.TRIGGER_OUT_PIN)
-eyesPin = DigitalOutputDevice(c.EYES_PIN)
+# Use platform hardware abstraction for GPIO
+pir = hardware.create_button(c.PIR_PIN, pull_up=False)
+triggerOut = hardware.create_output(c.TRIGGER_OUT_PIN)
+eyesPin = hardware.create_output(c.EYES_PIN)
 ambient_interrupt = False   # set to True when timer goes off or PIR triggered
 trigger_time = time.time()
 

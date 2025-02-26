@@ -9,14 +9,13 @@ import time
 import pyaudio
 import atexit
 import numpy as np
-from gpiozero.pins.pigpio import PiGPIOFactory
-from gpiozero import Device, AngularServo
 from bandpassFilter import BPFilter
 import config as c
 import control
+from platforms import hardware
 
 c.update()
-Device.pin_factory = PiGPIOFactory()
+hardware.setup()
 
 class AUDIO:
     def __init__(self):
@@ -24,10 +23,16 @@ class AUDIO:
         self.p = pyaudio.PyAudio()
         print("if you see ALSA error messages above, ignore them")
         print("End of PyAudio initialization")
-        self.jaw = AngularServo(c.JAW_PIN, min_angle=c.MIN_ANGLE, 
-                    max_angle=c.MAX_ANGLE, initial_angle=None, 
-                    min_pulse_width=c.SERVO_MIN/(1*10**6),
-                    max_pulse_width=c.SERVO_MAX/(1*10**6))
+        
+        # Create servo using platform hardware abstraction
+        self.jaw = hardware.create_servo(
+            c.JAW_PIN, 
+            min_angle=c.MIN_ANGLE, 
+            max_angle=c.MAX_ANGLE, 
+            min_pulse_width=c.SERVO_MIN/(1*10**6),
+            max_pulse_width=c.SERVO_MAX/(1*10**6)
+        )
+        
         self.bp = BPFilter()
         # flipping MIN_ANGLE and MAX_ANGLE in settings changes direction of servo movement BUT
         # must use unflipped values in calculating the amount of jaw movement
@@ -39,10 +44,15 @@ class AUDIO:
             self.j_max = c.MIN_ANGLE          
         
     def update_jaw(self):
-        self.jaw = AngularServo(c.JAW_PIN, min_angle=c.MIN_ANGLE, 
-                    max_angle=c.MAX_ANGLE, initial_angle=None, 
-                    min_pulse_width=c.SERVO_MIN/(1*10**6),
-                    max_pulse_width=c.SERVO_MAX/(1*10**6))
+        # Create servo using platform hardware abstraction
+        self.jaw = hardware.create_servo(
+            c.JAW_PIN, 
+            min_angle=c.MIN_ANGLE, 
+            max_angle=c.MAX_ANGLE, 
+            min_pulse_width=c.SERVO_MIN/(1*10**6),
+            max_pulse_width=c.SERVO_MAX/(1*10**6)
+        )
+        
         if c.MIN_ANGLE > c.MAX_ANGLE:
             self.j_min = c.MIN_ANGLE
             self.j_max = c.MAX_ANGLE
