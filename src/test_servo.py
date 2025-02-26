@@ -33,8 +33,9 @@ def test_servo(mode="sweep", speed=1.0, min_angle=None, max_angle=None, servo_mi
     # Load config
     try:
         c.update()
-    except KeyError:
-        print("Error loading config.ini, using default values")
+    except (KeyError, configparser.DuplicateSectionError) as e:
+        print(f"Error loading config.ini: {e}")
+        print("Using default values")
         # Set default values
         c.SERVO_MIN = 1050
         c.SERVO_MAX = 1250
