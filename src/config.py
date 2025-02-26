@@ -36,7 +36,7 @@ def update():
 	global EYES_PIN
 	global TRIGGER_OUT_PIN
 
-	cfg.read('config.ini')
+	cfg.read('src/config.ini')
 
 	SERVO_MIN = int(cfg['SERVO']['SERVO_MIN'])
 	SERVO_MAX = int(cfg['SERVO']['SERVO_MAX'])

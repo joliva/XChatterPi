@@ -136,9 +136,9 @@ class ConfigManager(tk.Toplevel):
         self.build(new_parser_dict)
 
 if __name__ == '__main__':
-    # Use the current directory for config file
-    config_path = 'config.ini'
-    old_config_path = 'oldconfig.ini'
+    # Use the src directory for config file
+    config_path = 'src/config.ini'
+    old_config_path = 'src/oldconfig.ini'
     
     # Create the main window
     window = tk.Tk()
