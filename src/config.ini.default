@@ -18,6 +18,7 @@ filtered_level3 = 4000
 buffer_size = 4096
 source = FILES
 output_channels = BOTH
+input_device = DEFAULT
 mic_time = 15
 ambient = OFF
 

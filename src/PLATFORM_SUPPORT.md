@@ -48,12 +48,14 @@ sudo bash src/install.sh
 - No physical hardware control
 - Simulates hardware interactions with console output
 - Full audio playback through system audio device
+- Supports microphone/line input for live audio processing
 - Useful for testing audio processing and configuration
 
 ### macOS
 - No physical hardware control
 - Simulates hardware interactions with console output
 - Full audio playback through system audio device
+- Supports microphone/line input for live audio processing
 - Useful for testing audio processing and configuration
 
 ## Developing for New Platforms
@@ -65,6 +67,27 @@ To add support for a new platform:
 3. Implement all required methods for hardware control
 4. Update the platform detection logic in `platforms/__init__.py` if needed
 
+## Audio Device Support
+
+Chatter Pi supports audio input and output on all platforms. To help with audio device configuration:
+
+1. List all available audio devices:
+   ```
+   python3 src/audio_devices.py list
+   ```
+
+2. Test audio input and output:
+   ```
+   python3 src/audio_devices.py test
+   ```
+
+3. Test input sensitivity and get recommended threshold settings:
+   ```
+   python3 src/audio_devices.py sensitivity
+   ```
+
+4. To use a specific input device, set the `INPUT_DEVICE` parameter in `config.ini` to the device index.
+
 ## Troubleshooting
 
 If you encounter platform-specific issues:
@@ -73,3 +96,4 @@ If you encounter platform-specific issues:
 2. Check that the correct platform is detected
 3. Verify that all required dependencies are installed
 4. For Raspberry Pi, ensure the pigpio daemon is running
+5. For audio issues, use the audio device utility: `python3 src/audio_devices.py list`

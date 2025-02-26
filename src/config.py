@@ -25,6 +25,7 @@ def update():
 	global SOURCE
 	global MIC_TIME
 	global OUTPUT_CHANNELS
+	global INPUT_DEVICE
 	global AMBIENT
 	global PROP_TRIGGER
 	global EYES
@@ -53,6 +54,7 @@ def update():
 	SOURCE = cfg['AUDIO']['SOURCE']
 	MIC_TIME = int(cfg['AUDIO']['MIC_TIME'])
 	OUTPUT_CHANNELS = cfg['AUDIO']['OUTPUT_CHANNELS']
+	INPUT_DEVICE = cfg['AUDIO'].get('INPUT_DEVICE', 'DEFAULT')
 	AMBIENT = cfg['AUDIO']['AMBIENT']
 	PROP_TRIGGER = cfg['PROP']['PROP_TRIGGER']
 	EYES = cfg['PROP']['EYES']

@@ -173,14 +173,38 @@ class AUDIO:
                 while self.stream.is_active():                
                     time.sleep(0.1)
 
-            # Playing from microphone
+            # Playing from microphone or line input
             elif c.SOURCE == 'MICROPHONE':
                 # New code to support only process jaw movements 50x per second
                 start_time = time.monotonic() 
-                latest_time = start_time                  
+                latest_time = start_time
+                
+                # Handle input device selection
+                input_device_index = None
+                if c.INPUT_DEVICE != 'DEFAULT':
+                    try:
+                        input_device_index = int(c.INPUT_DEVICE)
+                        input_device_info = self.p.get_device_info_by_index(input_device_index)
+                    except (ValueError, IOError):
+                        print(f"Invalid input device: {c.INPUT_DEVICE}, falling back to default")
+                        input_device_index = None
+                
+                # Get input device info
+                if input_device_index is None:
+                    input_device_info = self.p.get_default_input_device_info()
+                    input_device_index = input_device_info['index']
+                else:
+                    input_device_info = self.p.get_device_info_by_index(input_device_index)
+                
+                input_sample_rate = int(input_device_info['defaultSampleRate'])
+                
+                print(f"Using audio input device: {input_device_info['name']} (index: {input_device_index})")
+                print(f"Sample rate: {input_sample_rate} Hz")
+                
                 self.stream = self.p.open(format=pyaudio.paInt16, channels=1,
-                            rate=48000, frames_per_buffer=c.BUFFER_SIZE,
+                            rate=input_sample_rate, frames_per_buffer=c.BUFFER_SIZE,
                             input=True, output=True,
+                            input_device_index=input_device_index,
                             stream_callback=micCallback)  
                 if c.PROP_TRIGGER != 'START':
                     time.sleep(c.MIC_TIME)

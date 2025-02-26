@@ -6,9 +6,9 @@
 
 #### No Audio Output
 - Check that your audio output device is properly connected
-- Run `aplay -l` to list audio devices
-- Check volume levels with `alsamixer`
-- Try playing a test sound: `aplay /usr/share/sounds/alsa/Front_Center.wav`
+- Run `python3 src/audio_devices.py list` to list all audio devices
+- Check volume levels with `alsamixer` (Linux/Raspberry Pi) or system volume controls
+- Test your audio devices with `python3 src/audio_devices.py test`
 
 #### Audio Quality Issues
 - Try increasing BUFFER_SIZE in config.ini
@@ -17,11 +17,21 @@
   ```
   python3 src/analyze_audio.py src/vocals/v01.wav
   ```
+- Test your microphone/line input sensitivity:
+  ```
+  python3 src/audio_devices.py sensitivity
+  ```
 
 #### Audio Files Not Found
 - Ensure your audio files are in the correct directories (vocals/ and ambient/)
 - Verify file naming: vocal files should be v01.wav, v02.wav, etc.
 - Check file permissions: `chmod 644 vocals/*.wav ambient/*.wav`
+
+#### Microphone/Line Input Issues
+- Verify your input device is properly connected and recognized
+- List available audio devices: `python3 src/audio_devices.py list`
+- Test your input device: `python3 src/audio_devices.py test --input X` (replace X with device index)
+- Set the INPUT_DEVICE parameter in config.ini to your device index
 
 ### Servo Issues
 
