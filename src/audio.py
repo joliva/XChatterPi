@@ -95,11 +95,11 @@ class AUDIO:
                 else:
                     jawTarget = self.j_min
             else:     # Jawduino style multi-level or Wee Talker bandpss multi-level   
-                if volume > c.FIlTERED_LEVEL3:
+                if volume > c.FILTERED_LEVEL3:
                     jawTarget = self.j_max
-                elif volume > c.FIlTERED_LEVEL2:
+                elif volume > c.FILTERED_LEVEL2:
                     jawTarget = self.j_min + 2 * jawStep
-                elif volume > c.FIlTERED_LEVEL1:
+                elif volume > c.FILTERED_LEVEL1:
                     jawTarget = self.j_min + jawStep
                 else:
                     jawTarget = self.j_min   
