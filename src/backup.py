@@ -17,7 +17,7 @@ import sys
 def create_backup(include_audio=True, include_config=True):
     """Create a backup of configuration and optionally audio files"""
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    backup_dir = f"backup_{timestamp}"
+    backup_dir = f"backups/backup_{timestamp}"
     
     try:
         # Create backup directory
@@ -167,7 +167,7 @@ def restore_backup(backup_file, overwrite=False):
 
 def list_backups():
     """List available backup files"""
-    backups = glob.glob("backup_*.zip")
+    backups = glob.glob("backups/backup_*.zip")
     if not backups:
         print("No backup files found")
         return
