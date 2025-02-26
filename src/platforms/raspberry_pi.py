@@ -1,11 +1,13 @@
 """
-Raspberry Pi specific hardware implementation.
+Raspberry Pi specific hardware implementation with simulation support.
 """
 
+import os
 import subprocess
 from gpiozero.pins.pigpio import PiGPIOFactory
 from gpiozero import Device, AngularServo, Button, DigitalOutputDevice
 from platforms.base import HardwareBase
+from platforms.dummy import DummyServo, DummyButton, DummyOutput
 
 class PlatformHardware(HardwareBase):
     """Raspberry Pi specific hardware implementation"""
@@ -13,11 +15,19 @@ class PlatformHardware(HardwareBase):
     def __init__(self):
         """Initialize Raspberry Pi hardware"""
         self.pin_factory = None
+        self.simulation_mode = os.environ.get('CHATTERPI_SIMULATION', '0') == '1'
         
     def setup(self):
         """Initialize hardware components"""
-        self.pin_factory = PiGPIOFactory()
-        Device.pin_factory = self.pin_factory
+        if not self.simulation_mode:
+            try:
+                self.pin_factory = PiGPIOFactory()
+                Device.pin_factory = self.pin_factory
+            except Exception as e:
+                print(f"Warning: Failed to initialize Pi hardware ({e}), falling back to simulation mode")
+                self.simulation_mode = True
+        if self.simulation_mode:
+            print("Running in Raspberry Pi simulation mode")
         return True
     
     def cleanup(self):
@@ -26,7 +36,9 @@ class PlatformHardware(HardwareBase):
         pass
     
     def create_servo(self, pin, min_angle, max_angle, min_pulse_width, max_pulse_width):
-        """Create a servo controller using gpiozero"""
+        """Create a servo controller using gpiozero or dummy implementation"""
+        if self.simulation_mode:
+            return DummyServo()
         return AngularServo(
             pin, 
             min_angle=min_angle, 
@@ -37,11 +49,15 @@ class PlatformHardware(HardwareBase):
         )
     
     def create_button(self, pin, pull_up=True):
-        """Create a button/input device using gpiozero"""
+        """Create a button/input device using gpiozero or dummy implementation"""
+        if self.simulation_mode:
+            return DummyButton()
         return Button(pin, pull_up=pull_up)
     
     def create_output(self, pin):
-        """Create a digital output device using gpiozero"""
+        """Create a digital output device using gpiozero or dummy implementation"""
+        if self.simulation_mode:
+            return DummyOutput()
         return DigitalOutputDevice(pin)
     
     def is_service_running(self, service_name):
