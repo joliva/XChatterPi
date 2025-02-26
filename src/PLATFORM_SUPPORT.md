@@ -12,11 +12,13 @@ Chatter Pi now supports multiple platforms through a hardware abstraction layer.
 ### Linux (Ubuntu, Debian, etc.)
 - Software simulation of hardware components
 - No physical servo control or GPIO support
+- Full audio playback functionality
 - Useful for development and testing
 
 ### macOS
 - Software simulation of hardware components
 - No physical servo control or GPIO support
+- Full audio playback functionality
 - Useful for development and testing
 
 ## Platform Detection
@@ -40,16 +42,18 @@ sudo bash src/install.sh
 ### Raspberry Pi
 - Requires the pigpio daemon to be running (`sudo systemctl start pigpiod`)
 - Needs physical connections to servo, PIR sensor, and LEDs as configured in config.ini
-- Supports all features of Chatter Pi
+- Supports all features of Chatter Pi including hardware control and audio playback
 
 ### Linux
 - No physical hardware control
 - Simulates hardware interactions with console output
+- Full audio playback through system audio device
 - Useful for testing audio processing and configuration
 
 ### macOS
 - No physical hardware control
 - Simulates hardware interactions with console output
+- Full audio playback through system audio device
 - Useful for testing audio processing and configuration
 
 ## Developing for New Platforms
