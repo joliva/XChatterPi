@@ -15,6 +15,7 @@ class SoftwareServo:
         self.min_angle = min_angle
         self.max_angle = max_angle
         self._angle = None
+        self._angle_setter = self._default_angle_setter
         print(f"[Linux] Created software servo (pin {pin} is virtual)")
     
     @property
@@ -23,8 +24,15 @@ class SoftwareServo:
     
     @angle.setter
     def angle(self, value):
+        self._angle_setter(value)
+    
+    def _default_angle_setter(self, value):
         self._angle = value
         print(f"[Linux] Setting servo angle to {value}")
+    
+    def set_angle_handler(self, handler):
+        """Set a custom handler for angle changes"""
+        self._angle_setter = handler
     
     def close(self):
         print(f"[Linux] Closing software servo")
