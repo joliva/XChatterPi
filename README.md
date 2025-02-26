@@ -56,6 +56,12 @@ python3 src/analyze_audio.py --filtered ambient/a01.wav
 python3 src/analyze_audio.py --all  # Analyze all audio files
 ```
 
+If you don't have scipy installed, you can use the basic version:
+```bash
+python3 src/analyze_audio_basic.py vocals/v01.wav
+python3 src/analyze_audio_basic.py --all
+```
+
 ### Servo Test Utility
 Test and calibrate servo movement without playing audio:
 ```bash
