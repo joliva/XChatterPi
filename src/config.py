@@ -35,6 +35,7 @@ def update():
 	global PIR_PIN
 	global EYES_PIN
 	global TRIGGER_OUT_PIN
+	global RPI_HW_SIMULATION
 
 	cfg.read('src/config.ini')
 
@@ -64,4 +65,5 @@ def update():
 	PIR_PIN = int(cfg['PINS']['PIR_PIN'])
 	EYES_PIN = int(cfg['PINS']['EYES_PIN'])
 	TRIGGER_OUT_PIN = int(cfg['PINS']['TRIGGER_OUT_PIN'])
+	RPI_HW_SIMULATION = int(cfg['HARDWARE'].get('rpi_hw_simulation', 0))
 
