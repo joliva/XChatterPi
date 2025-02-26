@@ -4,6 +4,7 @@ Raspberry Pi specific hardware implementation with simulation support.
 
 import subprocess
 import time
+import config as c
 from gpiozero.pins.pigpio import PiGPIOFactory
 from gpiozero import Device, AngularServo, Button, DigitalOutputDevice
 from platforms.base import HardwareBase
