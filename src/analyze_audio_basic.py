@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Audio Analysis Tool for Chatter Pi
+Basic Audio Analysis Tool for Chatter Pi
 
 This utility analyzes audio files to help with configuring
-threshold levels for jaw movement.
+threshold levels for jaw movement. This is a simplified version
+that doesn't require scipy.
 """
 
 import wave
@@ -12,13 +13,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 import os
-import sys
 
-# Add the src directory to the path to find the bandpassFilter module
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from bandpassFilter import BPFilter
-
-def analyze_audio(filename, filtered=False):
+def analyze_audio(filename):
     """Analyze an audio file and display statistics and visualization"""
     if not os.path.exists(filename):
         print(f"Error: File {filename} not found")
@@ -46,11 +42,6 @@ def analyze_audio(filename, filtered=False):
         if channels == 2:
             samples = samples[1::2]
         
-        # Apply bandpass filter if requested
-        if filtered:
-            bp = BPFilter()
-            samples = bp.filter_data(samples)
-        
         # Calculate statistics
         abs_samples = np.abs(samples)
         max_volume = np.max(abs_samples)
@@ -73,18 +64,12 @@ def analyze_audio(filename, filtered=False):
         print(f"Average Volume: {avg_volume:.2f}")
         print(f"\nRecommended Threshold Levels:")
         
-        if filtered:
-            print("For STYLE=2 (Filtered Multi-level):")
-            print(f"FILTERED_LEVEL1: {int(p25)}")
-            print(f"FILTERED_LEVEL2: {int(p75)}")
-            print(f"FILTERED_LEVEL3: {int(p90)}")
-        else:
-            print("For STYLE=0 (Threshold):")
-            print(f"THRESHOLD: {int(p50)}")
-            print("\nFor STYLE=1 (Multi-level):")
-            print(f"LEVEL1: {int(p25)}")
-            print(f"LEVEL2: {int(p75)}")
-            print(f"LEVEL3: {int(p90)}")
+        print("For STYLE=0 (Threshold):")
+        print(f"THRESHOLD: {int(p50)}")
+        print("\nFor STYLE=1 (Multi-level):")
+        print(f"LEVEL1: {int(p25)}")
+        print(f"LEVEL2: {int(p75)}")
+        print(f"LEVEL3: {int(p90)}")
         
         # Create visualization
         plt.figure(figsize=(12, 8))
@@ -130,10 +115,8 @@ def analyze_audio(filename, filtered=False):
         print(f"Error analyzing file: {e}")
 
 def main():
-    parser = argparse.ArgumentParser(description='Analyze audio files for Chatter Pi')
+    parser = argparse.ArgumentParser(description='Basic Audio Analysis Tool for Chatter Pi (no scipy required)')
     parser.add_argument('filename', help='Audio file to analyze')
-    parser.add_argument('-f', '--filtered', action='store_true', 
-                        help='Apply bandpass filter before analysis')
     parser.add_argument('-a', '--all', action='store_true',
                         help='Analyze all audio files in vocals and ambient directories')
     
@@ -147,10 +130,10 @@ def main():
                 for file in os.listdir(directory):
                     if file.endswith('.wav'):
                         filepath = os.path.join(directory, file)
-                        analyze_audio(filepath, args.filtered)
+                        analyze_audio(filepath)
     else:
         # Analyze single file
-        analyze_audio(args.filename, args.filtered)
+        analyze_audio(args.filename)
 
 if __name__ == "__main__":
     main()
