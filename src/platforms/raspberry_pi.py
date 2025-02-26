@@ -4,10 +4,69 @@ Raspberry Pi specific hardware implementation with simulation support.
 
 import os
 import subprocess
+import time
 from gpiozero.pins.pigpio import PiGPIOFactory
 from gpiozero import Device, AngularServo, Button, DigitalOutputDevice
 from platforms.base import HardwareBase
-from platforms.dummy import DummyServo, DummyButton, DummyOutput
+
+class SoftwareServo:
+    """Software-based servo implementation for Raspberry Pi simulation"""
+    
+    def __init__(self):
+        self._angle = None
+        print("Created simulated servo")
+        
+    @property
+    def angle(self):
+        return self._angle
+        
+    @angle.setter
+    def angle(self, value):
+        self._angle = value
+        if value is not None:
+            print(f"Servo moved to angle: {value}")
+            
+    def close(self):
+        print("Closing simulated servo")
+
+class SoftwareButton:
+    """Software-based button implementation for Raspberry Pi simulation"""
+    
+    def __init__(self):
+        self._pressed = False
+        print("Created simulated button")
+        
+    def wait_for_press(self, timeout=None):
+        print("Waiting for simulated button press...")
+        time.sleep(2)  # Simulate 2 second wait
+        return True
+        
+    @property
+    def is_pressed(self):
+        # Toggle state each time to simulate button presses
+        self._pressed = not self._pressed
+        return self._pressed
+        
+    def close(self):
+        print("Closing simulated button")
+
+class SoftwareOutput:
+    """Software-based output implementation for Raspberry Pi simulation"""
+    
+    def __init__(self):
+        self._state = False
+        print("Created simulated output")
+        
+    def on(self):
+        self._state = True
+        print("Output turned ON")
+        
+    def off(self):
+        self._state = False
+        print("Output turned OFF")
+        
+    def close(self):
+        print("Closing simulated output")
 
 class PlatformHardware(HardwareBase):
     """Raspberry Pi specific hardware implementation"""
@@ -36,9 +95,9 @@ class PlatformHardware(HardwareBase):
         pass
     
     def create_servo(self, pin, min_angle, max_angle, min_pulse_width, max_pulse_width):
-        """Create a servo controller using gpiozero or dummy implementation"""
+        """Create a servo controller using gpiozero or software implementation"""
         if self.simulation_mode:
-            return DummyServo()
+            return SoftwareServo()
         return AngularServo(
             pin, 
             min_angle=min_angle, 
@@ -49,15 +108,15 @@ class PlatformHardware(HardwareBase):
         )
     
     def create_button(self, pin, pull_up=True):
-        """Create a button/input device using gpiozero or dummy implementation"""
+        """Create a button/input device using gpiozero or software implementation"""
         if self.simulation_mode:
-            return DummyButton()
+            return SoftwareButton()
         return Button(pin, pull_up=pull_up)
     
     def create_output(self, pin):
-        """Create a digital output device using gpiozero or dummy implementation"""
+        """Create a digital output device using gpiozero or software implementation"""
         if self.simulation_mode:
-            return DummyOutput()
+            return SoftwareOutput()
         return DigitalOutputDevice(pin)
     
     def is_service_running(self, service_name):
