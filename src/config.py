@@ -65,5 +65,5 @@ def update():
 	PIR_PIN = int(cfg['PINS']['PIR_PIN'])
 	EYES_PIN = int(cfg['PINS']['EYES_PIN'])
 	TRIGGER_OUT_PIN = int(cfg['PINS']['TRIGGER_OUT_PIN'])
-	RPI_HW_SIMULATION = int(cfg['HARDWARE'].get('rpi_hw_simulation', 0))
+	RPI_HW_SIMULATION = cfg['HARDWARE'].get('rpi_hw_simulation', 'false').lower() == 'true'
 
