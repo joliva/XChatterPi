@@ -137,8 +137,8 @@ class ConfigManager(tk.Toplevel):
 
 if __name__ == '__main__':
     # Use the src directory for config file
-    config_path = 'src/config.ini'
-    old_config_path = 'src/oldconfig.ini'
+    config_path = 'config.ini'
+    old_config_path = 'oldconfig.ini'
     
     # Create the main window
     window = tk.Tk()

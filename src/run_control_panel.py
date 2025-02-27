@@ -15,11 +15,11 @@ from platforms import get_platform
 def check_dependencies():
     """Check if all required dependencies are installed"""
     # First check if we have the dependency checker
-    if os.path.exists("src/check_gui_deps.py"):
+    if os.path.exists("check_gui_deps.py"):
         try:
             # Run the dependency checker
             result = subprocess.run(
-                [sys.executable, "src/check_gui_deps.py"],
+                [sys.executable, "check_gui_deps.py"],
                 capture_output=True,
                 text=True,
                 check=False
@@ -50,7 +50,7 @@ def check_dependencies():
 def main():
     """Main function to launch the control panel"""
     # Check if we're in the right directory
-    if not os.path.exists("src/controlPanel.py"):
+    if not os.path.exists("controlPanel.py"):
         print("Error: This script must be run from the ChatterPi root directory.")
         print("Please change to the ChatterPi directory and try again.")
         return
@@ -63,7 +63,7 @@ def main():
     # Launch the control panel
     print("Launching ChatterPi Control Panel...")
     try:
-        subprocess.run([sys.executable, "src/controlPanel.py"])
+        subprocess.run([sys.executable, "controlPanel.py"])
     except Exception as e:
         print(f"Error launching control panel: {e}")
 

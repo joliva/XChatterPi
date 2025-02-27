@@ -77,17 +77,17 @@ def main():
                     print("\nTo install SciPy, try:")
                     print("  pip install scipy")
                     print("\nIf that fails, you can use the basic audio analyzer:")
-                    print("  python3 src/analyze_audio_basic.py")
+                    print("  python3 analyze_audio_basic.py")
     else:
         print("\nAll required dependencies are installed!")
     
     # Check if we can run the audio analyzer
     if check_module("scipy") and check_module("numpy") and check_module("matplotlib"):
         print("\nYou can now run the audio analyzer:")
-        print("  python3 src/analyze_audio.py vocals/v01.wav")
+        print("  python3 analyze_audio.py vocals/v01.wav")
     elif check_module("numpy") and check_module("matplotlib"):
         print("\nYou can run the basic audio analyzer (no scipy required):")
-        print("  python3 src/analyze_audio_basic.py vocals/v01.wav")
+        print("  python3 analyze_audio_basic.py vocals/v01.wav")
 
 if __name__ == "__main__":
     main()

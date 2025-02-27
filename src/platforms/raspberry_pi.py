@@ -82,7 +82,7 @@ class PlatformHardware(HardwareBase):
     def __init__(self):
         """Initialize Raspberry Pi hardware"""
         self.pin_factory = None
-        self.simulation_mode = c.rpi_hw_simulation
+        self.simulation_mode = c.RPI_HW_SIMULATION
         
     def setup(self):
         """Initialize hardware components"""

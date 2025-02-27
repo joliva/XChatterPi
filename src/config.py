@@ -37,7 +37,7 @@ def update():
 	global TRIGGER_OUT_PIN
 	global RPI_HW_SIMULATION
 
-	cfg.read('src/config.ini')
+	cfg.read('config.ini')
 
 	SERVO_MIN = int(cfg['SERVO']['SERVO_MIN'])
 	SERVO_MAX = int(cfg['SERVO']['SERVO_MAX'])
@@ -65,6 +65,5 @@ def update():
 	PIR_PIN = int(cfg['PINS']['PIR_PIN'])
 	EYES_PIN = int(cfg['PINS']['EYES_PIN'])
 	TRIGGER_OUT_PIN = int(cfg['PINS']['TRIGGER_OUT_PIN'])
-	global rpi_hw_simulation
-	rpi_hw_simulation = cfg['HARDWARE'].get('rpi_hw_simulation', 'false').lower() == 'true'
+	RPI_HW_SIMULATION = bool(cfg['HARDWARE']['RPI_HW_SIMULATION'])
 

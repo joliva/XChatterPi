@@ -186,11 +186,11 @@ def main():
         for issue in all_issues:
             print(f"    - {issue}")
         print("\nRecommendations:")
-        print("  - Run 'sudo bash src/install.sh' to install dependencies")
+        print("  - Run 'sudo bash install.sh' to install dependencies")
         print("  - Run 'sudo systemctl start pigpiod' to start the pigpio daemon")
         print("  - Check your audio configuration with 'aplay -l' and 'alsamixer'")
         print("  - Verify your config.ini settings")
-        print("  - Test your servo with 'python3 src/test_servo.py'")
+        print("  - Test your servo with 'python3 test_servo.py'")
     else:
         print("  ✓ All checks passed! Your system appears to be properly configured.")
 

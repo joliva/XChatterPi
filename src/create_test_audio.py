@@ -135,9 +135,9 @@ def main():
     
     print("\nTest audio files created successfully!")
     print("\nYou can now run the audio analyzer:")
-    print("  python3 src/analyze_audio.py --all")
+    print("  python3 analyze_audio.py --all")
     print("\nOr test with a specific file:")
-    print("  python3 src/analyze_audio.py vocals/v01.wav")
+    print("  python3 analyze_audio.py vocals/v01.wav")
 
 if __name__ == "__main__":
     main()
