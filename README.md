@@ -96,6 +96,25 @@ python3 src/backup.py list          # List available backups
 python3 src/backup.py restore backup_20250226_123456.zip
 ```
 
+### Audio Processing Daemon
+Monitor a directory for wav files and automatically process them:
+```bash
+python3 src/daemon.py /path/to/watch/directory
+```
+
+The daemon will:
+- Watch the specified directory for new .wav files
+- Process any found files through ChatterPi
+- Delete each file after successful processing
+- Continue watching for new files
+- Handle graceful shutdown with Ctrl+C
+
+This is useful for:
+- Integration with other audio generation systems
+- Processing files from network shares
+- Batch processing multiple audio files
+- Automated testing and development
+
 ## Documentation
 
 For more detailed information, see:
