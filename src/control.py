@@ -36,10 +36,21 @@ def event_handler():
     if c.EYES == 'ON':
         eyesPin.off()
         
-def controls():
+def controls(fullpath_wavfile=None):
     global trigger_time
     global ambient_interrupt
     try:
+        # If a specific wav file was provided, play it directly
+        if fullpath_wavfile:
+            if c.EYES == 'ON':
+                eyesPin.on()
+            if c.TRIGGER_OUT == 'ON':
+                triggerOut.on()
+            a.play_vocal_track(fullpath_wavfile)
+            if c.EYES == 'ON':
+                eyesPin.off()
+            return
+
         if c.AMBIENT == 'ON':
             if c.PROP_TRIGGER == 'START': # No ambient tracks play with this setting
                 if c.TRIGGER_OUT == 'ON':

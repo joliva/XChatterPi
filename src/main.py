@@ -23,11 +23,5 @@ if c.SOURCE == "FILES" and c.PROP_TRIGGER == 'START':
     raise SystemExit(1)
 
 import control
-# If a specific wav file was provided, play it
-if fullpath_wavfile:
-    from tracks import Tracks
-    tracks = Tracks()
-    tracks.play_file(fullpath_wavfile)
-else:
-    # Otherwise run normal control loop
-    control.controls()
+# Run control loop (it will handle the wav file if provided)
+control.controls(fullpath_wavfile)
