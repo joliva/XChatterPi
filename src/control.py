@@ -42,13 +42,7 @@ def controls(fullpath_wavfile=None):
     try:
         # If a specific wav file was provided, play it directly
         if fullpath_wavfile:
-            if c.EYES == 'ON':
-                eyesPin.on()
-            if c.TRIGGER_OUT == 'ON':
-                triggerOut.on()
-            a.play_vocal_track(fullpath_wavfile)
-            if c.EYES == 'ON':
-                eyesPin.off()
+            tracks.play_file(fullpath_wavfile)
             return
 
         if c.AMBIENT == 'ON':

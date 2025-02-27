@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 Daemon process that watches a directory for .wav files and processes them through main.py
 """

@@ -30,6 +30,10 @@ class Tracks:
             else:
                 self.vocalTrackPos += 1
               
+    def play_file(self, full_path_wavfile):
+        if os.path.isfile(full_path_wavfile):
+            control.a.play_vocal_track(full_path_wavfile)
+              
     def play_ambient(self):
         while control.ambient_interrupt == False:
             if self.ambientList != []:
