@@ -1,14 +1,30 @@
 # XChatterPi
-Modified to be somewhat cross-platform compatible (RPI, MacOS, Linux). See src/PLATFORMS.md. John Oliva
+A flexible Audio Servo Controller for talking props (skulls, animals, etc.)
+Originally developed for Raspberry Pi by Mike McGurrin
+Enhanced with cross-platform support by John Oliva
 
-Flexible Audio Servo Controller using Raspberry Pi (for talking skulls, etc.)
-Mike McGurrin
+XChatterPi now runs on:
+- Raspberry Pi (with full hardware support)
+- Linux (with simulated hardware)
+- macOS (with simulated hardware)
 
-Developed on a Raspberry Pi Model 3 A+ and Pi 4 and tested on the 4 and a Pi Zero W. Given that it runs on a Pi Zero, I believe it will run on any current Pi. 
+On Linux and macOS, the hardware interfaces (servos, buttons, LEDs) are simulated in software, allowing you to develop and test your audio-controlled animations on any platform. For actual prop control, use a Raspberry Pi where real hardware is supported.
 
-To use XChatterPi, you can either download the source code, install all the necessary dependencies, and go from there OR you can download a pre-built Raspberry Pi image file to load onto a micro SD card and immediately go from there. 
+Originally developed and tested on Raspberry Pi Model 3 A+, Pi 4, and Pi Zero W.
 
-The image file is too large to put on GitHub. It's called chat.img.gz, and can be found at https://drive.google.com/drive/folders/1njfqegJImeXq-ZoW_yuY0TCJ0bTiwWCA?usp=sharing.
+# Installation Options
+
+1. Source Code Installation (All Platforms):
+   - Download the source code
+   - Install dependencies using the installation script
+   - Configure and run
+
+2. Pre-built Raspberry Pi Image (Raspberry Pi Only):
+   - Download chat.img.gz from [Google Drive](https://drive.google.com/drive/folders/1njfqegJImeXq-ZoW_yuY0TCJ0bTiwWCA?usp=sharing)
+   - Flash to SD card
+   - Boot and run
+
+Note: The pre-built image is only for Raspberry Pi. For Linux and macOS, use the source code installation.
 
 ## Quick Installation
 
