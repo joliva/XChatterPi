@@ -5,8 +5,16 @@ Created on Sun May 17 22:19:49 2020
 
 @author: Mike McGurrin
 """
+import sys
+import os
 import config as c
 c.update()
+
+# Check for optional wavfile argument
+fullpath_wavfile = sys.argv[1] if len(sys.argv) > 1 else None
+if fullpath_wavfile and not os.path.exists(fullpath_wavfile):
+    print(f"Error: Audio file not found: {fullpath_wavfile}")
+    sys.exit(1)
 
 # check for invalid config (can't have SOURCE == FILES and PROP_TRIGGER == START
 if c.SOURCE == "FILES" and c.PROP_TRIGGER == 'START':
@@ -15,12 +23,11 @@ if c.SOURCE == "FILES" and c.PROP_TRIGGER == 'START':
     raise SystemExit(1)
 
 import control
-# run control, which handles the triggers and event handling
-control.controls()
-    
-    
-        
-
-
-    
-        
+# If a specific wav file was provided, play it
+if fullpath_wavfile:
+    from tracks import Tracks
+    tracks = Tracks()
+    tracks.play_file(fullpath_wavfile)
+else:
+    # Otherwise run normal control loop
+    control.controls()
