@@ -1,4 +1,6 @@
 # XChatterPi
+Modified to be somewhat cross-platform compatible (RPI, MacOS, Linux). See src/PLATFORMS.md. John Oliva
+
 Flexible Audio Servo Controller using Raspberry Pi (for talking skulls, etc.)
 Mike McGurrin
 
