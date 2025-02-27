@@ -14,6 +14,11 @@ import config as c
 import control
 from platforms import hardware
 
+try:
+    import custom_servo_handler as csh
+except ImportError:
+    csh = None
+
 c.update()
 hardware.setup()
 
@@ -32,6 +37,7 @@ class AUDIO:
             min_pulse_width=c.SERVO_MIN/(1*10**6),
             max_pulse_width=c.SERVO_MAX/(1*10**6)
         )
+        if csh is not None:  self.jaw.set_angle_handler(csh.handler)
         
         self.bp = BPFilter()
         # flipping MIN_ANGLE and MAX_ANGLE in settings changes direction of servo movement BUT
@@ -52,6 +58,7 @@ class AUDIO:
             min_pulse_width=c.SERVO_MIN/(1*10**6),
             max_pulse_width=c.SERVO_MAX/(1*10**6)
         )
+        if csh is not None:  self.jaw.set_angle_handler(csh.handler)
         
         if c.MIN_ANGLE > c.MAX_ANGLE:
             self.j_min = c.MIN_ANGLE

@@ -6,6 +6,12 @@ import subprocess
 import platform
 from platforms.base import HardwareBase
 
+def default_handler(value): 
+    print(f"[macOS] Setting servo angle to {value}")
+
+def bottango_handler(value): 
+    print(f"[Bottango] Setting servo angle to {value}")
+
 # For macOS, we'll use a software-based approach since we don't have GPIO
 class SoftwareServo:
     """Software-based servo implementation for macOS"""
@@ -15,7 +21,8 @@ class SoftwareServo:
         self.min_angle = min_angle
         self.max_angle = max_angle
         self._angle = None
-        self._angle_setter = self._default_angle_setter
+        self._angle_handler = default_handler
+        #self.set_angle_handler(bottango_handler)
         print(f"[macOS] Created software servo (pin {pin} is virtual)")
     
     @property
@@ -24,15 +31,12 @@ class SoftwareServo:
     
     @angle.setter
     def angle(self, value):
-        self._angle_setter(value)
-    
-    def _default_angle_setter(self, value):
         self._angle = value
-        print(f"[macOS] Setting servo angle to {value}")
+        self._angle_handler(value)
     
     def set_angle_handler(self, handler):
         """Set a custom handler for angle changes"""
-        self._angle_setter = handler
+        self._angle_handler = handler
     
     def close(self):
         print(f"[macOS] Closing software servo")
