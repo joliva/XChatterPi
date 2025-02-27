@@ -1,10 +1,10 @@
-# ChatterPi
+# XChatterPi
 Flexible Audio Servo Controller using Raspberry Pi (for talking skulls, etc.)
 Mike McGurrin
 
 Developed on a Raspberry Pi Model 3 A+ and Pi 4 and tested on the 4 and a Pi Zero W. Given that it runs on a Pi Zero, I believe it will run on any current Pi. 
 
-To use ChatterPi, you can either download the source code, install all the necessary dependencies, and go from there OR you can download a pre-built Raspberry Pi image file to load onto a micro SD card and immediately go from there. 
+To use XChatterPi, you can either download the source code, install all the necessary dependencies, and go from there OR you can download a pre-built Raspberry Pi image file to load onto a micro SD card and immediately go from there. 
 
 The image file is too large to put on GitHub. It's called chat.img.gz, and can be found at https://drive.google.com/drive/folders/1njfqegJImeXq-ZoW_yuY0TCJ0bTiwWCA?usp=sharing.
 
@@ -17,7 +17,7 @@ sudo bash src/install.sh
 
 # Introduction
 
-ChatterPi is a software package that turns a Raspberry Pi into an audio servo controller. In other words, the Pi outputs commands to control a servo based on the volume of the audio input. The input can be either stored audio files (in either mono or stereo .wav format) or from an external source, such as a microphone or line level input. One of the uses is to drive animatronic props, such as a skull or a talking bird.
+XChatterPi is a software package that turns a Raspberry Pi into an audio servo controller. In other words, the Pi outputs commands to control a servo based on the volume of the audio input. The input can be either stored audio files (in either mono or stereo .wav format) or from an external source, such as a microphone or line level input. One of the uses is to drive animatronic props, such as a skull or a talking bird.
 
 See the documentation for additional information.
 
@@ -29,7 +29,7 @@ Later, someone named Mike (no relation) combined an Arduino with a hardware volu
 
 A few years ago, Steve Bjork from Haunt Hackers combined dedicated hardware with a propeller microcontroller to increase the number of levels to almost 256 and also to filter out low and high frequencies that don&#39;t tend to result in jaw movement for spoken sound. The result is the [Wee Little Talker](http://www.haunthackers.com/weelittletalker/index.shtml). This commercial board also has an onboard mp3 player, can be triggered externally, control LED &#39;eyes,&quot; and adds a wide array of features including a voice feedback menu system.
 
-It occurred to me that with current single board computer capabilities and powerful software libraries, it should be possible to incorporate most of the best features of all of these into a single, software-based system running on a Raspberry Pi. The result is ChatterPi. ChatterPi was developed from scratch using the Python language, but ideas for capabilities and features were freely borrowed from previous audio servo controller projects.
+It occurred to me that with current single board computer capabilities and powerful software libraries, it should be possible to incorporate most of the best features of all of these into a single, software-based system running on a Raspberry Pi. The result is XChatterPi. XChatterPi was developed from scratch using the Python language, but ideas for capabilities and features were freely borrowed from previous audio servo controller projects.
 
 # Features
 ChaterPi includes the following features
@@ -46,7 +46,7 @@ ChaterPi includes the following features
 
 ## Utilities
 
-ChatterPi now includes several utilities to help with setup and configuration:
+XChatterPi now includes several utilities to help with setup and configuration:
 
 ### Audio Analysis Tool
 Analyzes audio files to recommend threshold settings for jaw movement:
@@ -85,4 +85,4 @@ For more detailed information, see:
 - `src/TECHNICAL.md` - Technical details about the code
 - `src/QUICKSTART.md` - Quick start guide
 
-If you use ChatterPi, I'd love to hear about it. Post a comment on my blog: https://www.mcgurrin.info/robots/690/ and consider giving this package a star here on GitHub. Thanks!
+If you use XChatterPi, I'd love to hear about it. Post a comment on my blog: https://www.mcgurrin.info/robots/690/ and consider giving this package a star here on GitHub. Thanks!
