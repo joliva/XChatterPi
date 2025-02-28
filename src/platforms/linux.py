@@ -4,18 +4,7 @@ Linux specific hardware implementation.
 
 import subprocess
 import platform
-import logging
 from platforms.base import HardwareBase
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-def default_handler(value): 
-    logger.info(f"[Linux] Setting servo angle to {value}")
-
-def bottango_handler(value): 
-    logger.info(f"[Bottango] Setting servo angle to {value}")
 
 # For Linux, we'll use a software-based approach since we don't have GPIO
 class SoftwareServo:
@@ -26,9 +15,7 @@ class SoftwareServo:
         self.min_angle = min_angle
         self.max_angle = max_angle
         self._angle = None
-        self._angle_handler = default_handler
-        #self.set_angle_handler(bottango_handler)
-        logger.info(f"[Linux] Created software servo (pin {pin} is virtual)")
+        print(f"[Linux] Created software servo (pin {pin} is virtual)")
     
     @property
     def angle(self):
@@ -37,14 +24,9 @@ class SoftwareServo:
     @angle.setter
     def angle(self, value):
         self._angle = value
-        self._angle_handler(value)
-    
-    def set_angle_handler(self, handler):
-        """Set a custom handler for angle changes"""
-        self._angle_handler = handler
     
     def close(self):
-        logger.info(f"[Linux] Closing software servo")
+        print(f"[Linux] Closing software servo")
 
 class SoftwareButton:
     """Software-based button implementation for Linux"""
@@ -53,16 +35,16 @@ class SoftwareButton:
         self.pin = pin
         self.pull_up = pull_up
         self._pressed = False
-        logger.info(f"[Linux] Created software button (pin {pin} is virtual)")
+        print(f"[Linux] Created software button (pin {pin} is virtual)")
     
     def wait_for_press(self, timeout=None):
-        logger.info(f"[Linux] Waiting for button press (virtual)")
+        print(f"[Linux] Waiting for button press (virtual)")
         # Simulate button press with random delay between 1-3 seconds
         import time
         import random
         delay = random.uniform(1, 3)
         time.sleep(delay)
-        logger.info(f"[Linux] Button pressed (simulated)")
+        print(f"[Linux] Button pressed (simulated)")
     
     @property
     def is_pressed(self):
@@ -72,7 +54,7 @@ class SoftwareButton:
         return self._pressed
     
     def close(self):
-        logger.info(f"[Linux] Closing software button")
+        print(f"[Linux] Closing software button")
 
 class SoftwareOutput:
     """Software-based output implementation for Linux"""
@@ -80,30 +62,30 @@ class SoftwareOutput:
     def __init__(self, pin):
         self.pin = pin
         self._state = False
-        logger.info(f"[Linux] Created software output (pin {pin} is virtual)")
+        print(f"[Linux] Created software output (pin {pin} is virtual)")
     
     def on(self):
         self._state = True
-        logger.info(f"[Linux] Turning on output (virtual)")
+        print(f"[Linux] Turning on output (virtual)")
     
     def off(self):
         self._state = False
-        logger.info(f"[Linux] Turning off output (virtual)")
+        print(f"[Linux] Turning off output (virtual)")
     
     def close(self):
-        logger.info(f"[Linux] Closing software output")
+        print(f"[Linux] Closing software output")
 
 class PlatformHardware(HardwareBase):
     """Linux specific hardware implementation"""
     
     def setup(self):
         """Initialize Linux hardware components"""
-        logger.info("[Linux] Setting up hardware")
+        print("[Linux] Setting up hardware")
         return True
     
     def cleanup(self):
         """Clean up Linux hardware resources"""
-        logger.info("[Linux] Cleaning up hardware")
+        print("[Linux] Cleaning up hardware")
     
     def create_servo(self, pin, min_angle, max_angle, min_pulse_width, max_pulse_width):
         """Create a software servo controller"""
