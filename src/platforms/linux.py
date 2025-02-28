@@ -6,6 +6,9 @@ import subprocess
 import platform
 from platforms.base import HardwareBase
 
+def default_handler(value): 
+    print(f"[Linux] Setting servo angle to {value}")
+
 # For Linux, we'll use a software-based approach since we don't have GPIO
 class SoftwareServo:
     """Software-based servo implementation for Linux"""
