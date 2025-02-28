@@ -5,9 +5,20 @@ Raspberry Pi specific hardware implementation with simulation support.
 import subprocess
 import time
 import config as c
+import logging
 from gpiozero.pins.pigpio import PiGPIOFactory
 from gpiozero import Device, AngularServo, Button, DigitalOutputDevice
 from platforms.base import HardwareBase
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def default_handler(value): 
+    logger.info(f"[Raspberry Pi] Setting servo angle to {value}")
+
+def bottango_handler(value): 
+    logger.info(f"[Bottango] Setting servo angle to {value}")
 
 class SoftwareServo:
     """Software-based servo implementation for Raspberry Pi simulation"""
@@ -15,7 +26,7 @@ class SoftwareServo:
     def __init__(self):
         self._angle = None
         self._angle_setter = self._default_angle_setter
-        print("Created simulated servo")
+        logger.info(f"[Raspberry Pi] Created simulated servo")
         
     @property
     def angle(self):
@@ -28,27 +39,30 @@ class SoftwareServo:
     def _default_angle_setter(self, value):
         self._angle = value
         if value is not None:
-            print(f"Servo moved to angle: {value}")
+            logger.info(f"[Raspberry Pi] Servo moved to angle: {value}")
             
     def set_angle_handler(self, handler):
         """Set a custom handler for angle changes"""
         self._angle_setter = handler
             
     def close(self):
-        print("Closing simulated servo")
+        logger.info(f"[Raspberry Pi] Closing simulated servo")
 
 class SoftwareButton:
     """Software-based button implementation for Raspberry Pi simulation"""
     
     def __init__(self):
         self._pressed = False
-        print("Created simulated button")
+        logger.info(f"[Raspberry Pi] Created simulated button")
         
     def wait_for_press(self, timeout=None):
-        print("Waiting for simulated button press...")
-        time.sleep(2)  # Simulate 2 second wait
-        return True
-        
+        logger.info(f"[Raspberry Pi] Waiting for simulated button press...")
+        # Simulate button press with random delay between 1-3 seconds
+        import random
+        delay = random.uniform(1, 3)
+        time.sleep(delay)
+        logger.info(f"[Raspberry Pi] Button pressed (simulated)")
+    
     @property
     def is_pressed(self):
         # Toggle state each time to simulate button presses
@@ -56,25 +70,25 @@ class SoftwareButton:
         return self._pressed
         
     def close(self):
-        print("Closing simulated button")
+        logger.info(f"[Raspberry Pi] Closing simulated button")
 
 class SoftwareOutput:
     """Software-based output implementation for Raspberry Pi simulation"""
     
     def __init__(self):
         self._state = False
-        print("Created simulated output")
+        logger.info(f"[Raspberry Pi] Created simulated output")
         
     def on(self):
         self._state = True
-        print("Output turned ON")
+        logger.info(f"[Raspberry Pi] Output turned ON")
         
     def off(self):
         self._state = False
-        print("Output turned OFF")
+        logger.info(f"[Raspberry Pi] Output turned OFF")
         
     def close(self):
-        print("Closing simulated output")
+        logger.info(f"[Raspberry Pi] Closing simulated output")
 
 class PlatformHardware(HardwareBase):
     """Raspberry Pi specific hardware implementation"""
@@ -91,10 +105,10 @@ class PlatformHardware(HardwareBase):
                 self.pin_factory = PiGPIOFactory()
                 Device.pin_factory = self.pin_factory
             except Exception as e:
-                print(f"Warning: Failed to initialize Pi hardware ({e}), falling back to simulation mode")
+                logger.warning(f"Failed to initialize Pi hardware ({e}), falling back to simulation mode")
                 self.simulation_mode = True
         if self.simulation_mode:
-            print("Running in Raspberry Pi simulation mode")
+            logger.info(f"[Raspberry Pi] Running in simulation mode")
         return True
     
     def cleanup(self):
