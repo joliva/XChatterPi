@@ -15,6 +15,7 @@ class SoftwareServo:
         self.min_angle = min_angle
         self.max_angle = max_angle
         self._angle = None
+        self._angle_setter = self._default_angle_setter
         print(f"[Linux] Created software servo (pin {pin} is virtual)")
     
     @property
@@ -23,7 +24,15 @@ class SoftwareServo:
     
     @angle.setter
     def angle(self, value):
+        self._angle_setter(value)
+    
+    def _default_angle_setter(self, value):
         self._angle = value
+        print(f"[Linux] Setting servo angle to {value}")
+    
+    def set_angle_handler(self, handler):
+        """Set a custom handler for angle changes"""
+        self._angle_setter = handler
     
     def close(self):
         print(f"[Linux] Closing software servo")
@@ -39,11 +48,9 @@ class SoftwareButton:
     
     def wait_for_press(self, timeout=None):
         print(f"[Linux] Waiting for button press (virtual)")
-        # Simulate button press with random delay between 1-3 seconds
+        # In software mode, simulate a button press after 2 seconds
         import time
-        import random
-        delay = random.uniform(1, 3)
-        time.sleep(delay)
+        time.sleep(2)
         print(f"[Linux] Button pressed (simulated)")
     
     @property

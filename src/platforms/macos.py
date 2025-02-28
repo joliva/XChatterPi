@@ -6,6 +6,12 @@ import subprocess
 import platform
 from platforms.base import HardwareBase
 
+def default_handler(value): 
+    print(f"[macOS] Setting servo angle to {value}")
+
+def bottango_handler(value): 
+    print(f"[Bottango] Setting servo angle to {value}")
+
 # For macOS, we'll use a software-based approach since we don't have GPIO
 class SoftwareServo:
     """Software-based servo implementation for macOS"""
@@ -15,6 +21,8 @@ class SoftwareServo:
         self.min_angle = min_angle
         self.max_angle = max_angle
         self._angle = None
+        self._angle_handler = default_handler
+        #self.set_angle_handler(bottango_handler)
         print(f"[macOS] Created software servo (pin {pin} is virtual)")
     
     @property
@@ -24,6 +32,11 @@ class SoftwareServo:
     @angle.setter
     def angle(self, value):
         self._angle = value
+        self._angle_handler(value)
+    
+    def set_angle_handler(self, handler):
+        """Set a custom handler for angle changes"""
+        self._angle_handler = handler
     
     def close(self):
         print(f"[macOS] Closing software servo")
@@ -39,11 +52,9 @@ class SoftwareButton:
     
     def wait_for_press(self, timeout=None):
         print(f"[macOS] Waiting for button press (virtual)")
-        # Simulate button press with random delay between 1-3 seconds
+        # In software mode, simulate a button press after 2 seconds
         import time
-        import random
-        delay = random.uniform(1, 3)
-        time.sleep(delay)
+        time.sleep(2)
         print(f"[macOS] Button pressed (simulated)")
     
     @property
@@ -117,7 +128,7 @@ class PlatformHardware(HardwareBase):
         info = {}
         
         # Get macOS version
-        info["version"] = platform.mac_ver()
+        info["version"] = platform.mac_ver()[0]
         
         # Get model
         try:

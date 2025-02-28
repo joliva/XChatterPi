@@ -14,7 +14,8 @@ class SoftwareServo:
     
     def __init__(self):
         self._angle = None
-        print(f"[Raspberry Pi] Created simulated servo")
+        self._angle_setter = self._default_angle_setter
+        print("Created simulated servo")
         
     @property
     def angle(self):
@@ -22,26 +23,32 @@ class SoftwareServo:
         
     @angle.setter
     def angle(self, value):
+        self._angle_setter(value)
+            
+    def _default_angle_setter(self, value):
         self._angle = value
+        if value is not None:
+            print(f"Servo moved to angle: {value}")
+            
+    def set_angle_handler(self, handler):
+        """Set a custom handler for angle changes"""
+        self._angle_setter = handler
             
     def close(self):
-        print(f"[Raspberry Pi] Closing simulated servo")
+        print("Closing simulated servo")
 
 class SoftwareButton:
     """Software-based button implementation for Raspberry Pi simulation"""
     
     def __init__(self):
         self._pressed = False
-        print(f"[Raspberry Pi] Created simulated button")
+        print("Created simulated button")
         
     def wait_for_press(self, timeout=None):
-        print(f"[Raspberry Pi] Waiting for simulated button press...")
-        # Simulate button press with random delay between 1-3 seconds
-        import random
-        delay = random.uniform(1, 3)
-        time.sleep(delay)
-        print(f"[Raspberry Pi] Button pressed (simulated)")
-    
+        print("Waiting for simulated button press...")
+        time.sleep(2)  # Simulate 2 second wait
+        return True
+        
     @property
     def is_pressed(self):
         # Toggle state each time to simulate button presses
@@ -49,25 +56,25 @@ class SoftwareButton:
         return self._pressed
         
     def close(self):
-        print(f"[Raspberry Pi] Closing simulated button")
+        print("Closing simulated button")
 
 class SoftwareOutput:
     """Software-based output implementation for Raspberry Pi simulation"""
     
     def __init__(self):
         self._state = False
-        print(f"[Raspberry Pi] Created simulated output")
+        print("Created simulated output")
         
     def on(self):
         self._state = True
-        print(f"[Raspberry Pi] Output turned ON")
+        print("Output turned ON")
         
     def off(self):
         self._state = False
-        print(f"[Raspberry Pi] Output turned OFF")
+        print("Output turned OFF")
         
     def close(self):
-        print(f"[Raspberry Pi] Closing simulated output")
+        print("Closing simulated output")
 
 class PlatformHardware(HardwareBase):
     """Raspberry Pi specific hardware implementation"""
@@ -84,10 +91,10 @@ class PlatformHardware(HardwareBase):
                 self.pin_factory = PiGPIOFactory()
                 Device.pin_factory = self.pin_factory
             except Exception as e:
-                print(f"Failed to initialize Pi hardware ({e}), falling back to simulation mode")
+                print(f"Warning: Failed to initialize Pi hardware ({e}), falling back to simulation mode")
                 self.simulation_mode = True
         if self.simulation_mode:
-            print(f"[Raspberry Pi] Running in simulation mode")
+            print("Running in Raspberry Pi simulation mode")
         return True
     
     def cleanup(self):
