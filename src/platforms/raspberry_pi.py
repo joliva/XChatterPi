@@ -15,10 +15,13 @@ def default_handler(value):
 class SoftwareServo:
     """Software-based servo implementation for Raspberry Pi simulation"""
     
-    def __init__(self):
+    def __init__(self, pin=None, min_angle=None, max_angle=None, **kwargs):
+        self.pin = pin
+        self.min_angle = min_angle
+        self.max_angle = max_angle
         self._angle = None
-        self._angle_setter = self._default_angle_setter
-        print("Created simulated servo")
+        self._angle_handler = default_handler
+        print(f"[RaspberryPi] Created software servo (pin {pin} is virtual)")
         
     @property
     def angle(self):
@@ -26,19 +29,15 @@ class SoftwareServo:
         
     @angle.setter
     def angle(self, value):
-        self._angle_setter(value)
-            
-    def _default_angle_setter(self, value):
         self._angle = value
-        if value is not None:
-            print(f"Servo moved to angle: {value}")
+        self._angle_handler(value)
             
     def set_angle_handler(self, handler):
         """Set a custom handler for angle changes"""
-        self._angle_setter = handler
+        self._angle_handler = handler
             
     def close(self):
-        print("Closing simulated servo")
+        print("[RaspberryPi] Closing software servo")
 
 class SoftwareButton:
     """Software-based button implementation for Raspberry Pi simulation"""
@@ -108,7 +107,7 @@ class PlatformHardware(HardwareBase):
     def create_servo(self, pin, min_angle, max_angle, min_pulse_width, max_pulse_width):
         """Create a servo controller using gpiozero or software implementation"""
         if self.simulation_mode:
-            return SoftwareServo()
+            return SoftwareServo(pin, min_angle, max_angle)
         return AngularServo(
             pin, 
             min_angle=min_angle, 
