@@ -10,7 +10,7 @@ from gpiozero import Device, AngularServo, Button, DigitalOutputDevice
 from platforms.base import HardwareBase
 
 def default_handler(value): 
-    print(f"[RaspberryPi] Setting servo angle to {value}")
+    print(f"[default] Setting servo angle to {value}")
 
 class SoftwareServo:
     """Software-based servo implementation for Raspberry Pi simulation"""
