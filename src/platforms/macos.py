@@ -4,13 +4,18 @@ macOS specific hardware implementation.
 
 import subprocess
 import platform
+import logging
 from platforms.base import HardwareBase
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 def default_handler(value): 
-    print(f"[macOS] Setting servo angle to {value}")
+    logger.info(f"[macOS] Setting servo angle to {value}")
 
 def bottango_handler(value): 
-    print(f"[Bottango] Setting servo angle to {value}")
+    logger.info(f"[Bottango] Setting servo angle to {value}")
 
 # For macOS, we'll use a software-based approach since we don't have GPIO
 class SoftwareServo:
@@ -23,7 +28,7 @@ class SoftwareServo:
         self._angle = None
         self._angle_handler = default_handler
         #self.set_angle_handler(bottango_handler)
-        print(f"[macOS] Created software servo (pin {pin} is virtual)")
+        logger.info(f"[macOS] Created software servo (pin {pin} is virtual)")
     
     @property
     def angle(self):
@@ -39,7 +44,7 @@ class SoftwareServo:
         self._angle_handler = handler
     
     def close(self):
-        print(f"[macOS] Closing software servo")
+        logger.info(f"[macOS] Closing software servo")
 
 class SoftwareButton:
     """Software-based button implementation for macOS"""
@@ -48,14 +53,16 @@ class SoftwareButton:
         self.pin = pin
         self.pull_up = pull_up
         self._pressed = False
-        print(f"[macOS] Created software button (pin {pin} is virtual)")
+        logger.info(f"[macOS] Created software button (pin {pin} is virtual)")
     
     def wait_for_press(self, timeout=None):
-        print(f"[macOS] Waiting for button press (virtual)")
-        # In software mode, simulate a button press after 2 seconds
+        logger.info(f"[macOS] Waiting for button press (virtual)")
+        # Simulate button press with random delay between 1-3 seconds
         import time
-        time.sleep(2)
-        print(f"[macOS] Button pressed (simulated)")
+        import random
+        delay = random.uniform(1, 3)
+        time.sleep(delay)
+        logger.info(f"[macOS] Button pressed (simulated)")
     
     @property
     def is_pressed(self):
@@ -65,7 +72,7 @@ class SoftwareButton:
         return self._pressed
     
     def close(self):
-        print(f"[macOS] Closing software button")
+        logger.info(f"[macOS] Closing software button")
 
 class SoftwareOutput:
     """Software-based output implementation for macOS"""
@@ -73,30 +80,30 @@ class SoftwareOutput:
     def __init__(self, pin):
         self.pin = pin
         self._state = False
-        print(f"[macOS] Created software output (pin {pin} is virtual)")
+        logger.info(f"[macOS] Created software output (pin {pin} is virtual)")
     
     def on(self):
         self._state = True
-        print(f"[macOS] Turning on output (virtual)")
+        logger.info(f"[macOS] Turning on output (virtual)")
     
     def off(self):
         self._state = False
-        print(f"[macOS] Turning off output (virtual)")
+        logger.info(f"[macOS] Turning off output (virtual)")
     
     def close(self):
-        print(f"[macOS] Closing software output")
+        logger.info(f"[macOS] Closing software output")
 
 class PlatformHardware(HardwareBase):
     """macOS specific hardware implementation"""
     
     def setup(self):
         """Initialize macOS hardware components"""
-        print("[macOS] Setting up hardware")
+        logger.info("[macOS] Setting up hardware")
         return True
     
     def cleanup(self):
         """Clean up macOS hardware resources"""
-        print("[macOS] Cleaning up hardware")
+        logger.info("[macOS] Cleaning up hardware")
     
     def create_servo(self, pin, min_angle, max_angle, min_pulse_width, max_pulse_width):
         """Create a software servo controller"""
@@ -128,7 +135,7 @@ class PlatformHardware(HardwareBase):
         info = {}
         
         # Get macOS version
-        info["version"] = platform.mac_ver()[0]
+        info["version"] = platform.mac_ver()
         
         # Get model
         try:
