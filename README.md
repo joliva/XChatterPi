@@ -1,7 +1,7 @@
 # XChatterPi
 A flexible Audio Servo Controller for talking props (skulls, animals, etc.)
 
-Originally developed as ChatterPi by Mike McGurrin (https://github.com/ViennaMike/ChatterPi)
+Originally developed as XChatterPi by Mike McGurrin (https://github.com/ViennaMike/ChatterPi)
 Enhanced with cross-platform support by John Oliva
 
 XChatterPi now runs on:
@@ -105,7 +105,7 @@ python3 src/daemon.py /path/to/watch/directory
 
 The daemon will:
 - Watch the specified directory for new .wav files
-- Process any found files through ChatterPi
+- Process any found files through XChatterPi
 - Delete each file after successful processing
 - Continue watching for new files
 - Handle graceful shutdown with Ctrl+C
@@ -125,4 +125,4 @@ For more detailed information, see:
 
 If you use XChatterPi, I'd love to hear about it. Post a comment on my blog: https://www.mcgurrin.info/robots/690/ and consider giving this package a star here on GitHub. Thanks!
 
-Special thanks to Mike McGurrin for the original ChatterPi project that XChatterPi is based on.
+Special thanks to Mike McGurrin for the original XChatterPi project that XChatterPi is based on.
