@@ -1,6 +1,6 @@
 # XChatterPi
 A flexible Audio Servo Controller for talking props (skulls, animals, etc.)
-Originally developed for Raspberry Pi by Mike McGurrin
+Originally developed as ChatterPi by Mike McGurrin (https://github.com/ViennaMike/ChatterPi)
 Enhanced with cross-platform support by John Oliva
 
 XChatterPi now runs on:
@@ -50,7 +50,7 @@ A few years ago, Steve Bjork from Haunt Hackers combined dedicated hardware with
 It occurred to me that with current single board computer capabilities and powerful software libraries, it should be possible to incorporate most of the best features of all of these into a single, software-based system running on a Raspberry Pi. The result is XChatterPi. XChatterPi was developed from scratch using the Python language, but ideas for capabilities and features were freely borrowed from previous audio servo controller projects.
 
 # Features
-ChaterPi includes the following features
+XChatterPi includes the following features
 
 - Audio signal volume controls servo
 - Can be started by an external trigger, such as a PIR motion detector
@@ -67,7 +67,7 @@ ChaterPi includes the following features
 XChatterPi now includes several utilities to help with setup and configuration:
 
 ### Audio Analysis Tool
-Analyzes audio files to recommend threshold settings for jaw movement:
+Analyzes audio files to recommend threshold settings for jaw movement in XChatterPi:
 ```bash
 python3 src/analyze_audio.py vocals/v01.wav
 python3 src/analyze_audio.py --filtered ambient/a01.wav
@@ -81,7 +81,7 @@ python3 src/analyze_audio_basic.py --all
 ```
 
 ### Servo Test Utility
-Test and calibrate servo movement without playing audio:
+Test and calibrate servo movement in XChatterPi without playing audio:
 ```bash
 python3 src/test_servo.py --mode sweep
 python3 src/test_servo.py --mode steps --speed 2.0
@@ -89,7 +89,7 @@ python3 src/test_servo.py --mode position --min-angle 0 --max-angle 90
 ```
 
 ### Backup Utility
-Create and restore backups of your configuration and audio files:
+Create and restore backups of your XChatterPi configuration and audio files:
 ```bash
 python3 src/backup.py create        # Create a full backup
 python3 src/backup.py list          # List available backups
@@ -97,7 +97,7 @@ python3 src/backup.py restore backup_20250226_123456.zip
 ```
 
 ### Audio Processing Daemon
-Monitor a directory for wav files and automatically process them:
+Monitor a directory for wav files and automatically process them with XChatterPi:
 ```bash
 python3 src/daemon.py /path/to/watch/directory
 ```
@@ -123,3 +123,5 @@ For more detailed information, see:
 - `src/QUICKSTART.md` - Quick start guide
 
 If you use XChatterPi, I'd love to hear about it. Post a comment on my blog: https://www.mcgurrin.info/robots/690/ and consider giving this package a star here on GitHub. Thanks!
+
+Special thanks to Mike McGurrin for the original ChatterPi project that XChatterPi is based on.
