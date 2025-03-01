@@ -1,5 +1,6 @@
 # XChatterPi
 A flexible Audio Servo Controller for talking props (skulls, animals, etc.)
+
 Originally developed as ChatterPi by Mike McGurrin (https://github.com/ViennaMike/ChatterPi)
 Enhanced with cross-platform support by John Oliva
 
