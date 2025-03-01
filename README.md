@@ -47,7 +47,7 @@ Later, someone named Mike (no relation) combined an Arduino with a hardware volu
 
 A few years ago, Steve Bjork from Haunt Hackers combined dedicated hardware with a propeller microcontroller to increase the number of levels to almost 256 and also to filter out low and high frequencies that don&#39;t tend to result in jaw movement for spoken sound. The result is the [Wee Little Talker](http://www.haunthackers.com/weelittletalker/index.shtml). This commercial board also has an onboard mp3 player, can be triggered externally, control LED &#39;eyes,&quot; and adds a wide array of features including a voice feedback menu system.
 
-It occurred to me that with current single board computer capabilities and powerful software libraries, it should be possible to incorporate most of the best features of all of these into a single, software-based system running on a Raspberry Pi. The result is XChatterPi. XChatterPi was developed from scratch using the Python language, but ideas for capabilities and features were freely borrowed from previous audio servo controller projects.
+It occurred to me that with current single board computer capabilities and powerful software libraries, it should be possible to incorporate most of the best features of all of these into a single, software-based system running on a Raspberry Pi. The result is XChatterPi. XChatterPi was based on ChatterPi (https://github.com/ViennaMike/ChatterPi) and developed using the Python language, but ideas for capabilities and features were freely borrowed from previous audio servo controller projects.
 
 # Features
 XChatterPi includes the following features
