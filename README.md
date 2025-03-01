@@ -1,7 +1,7 @@
 # XChatterPi
 A flexible Audio Servo Controller for talking props (skulls, animals, etc.)
 
-Originally developed as XChatterPi by Mike McGurrin (https://github.com/ViennaMike/ChatterPi)
+Originally developed as ChatterPi by Mike McGurrin (https://github.com/ViennaMike/ChatterPi)
 Enhanced with cross-platform support by John Oliva
 
 XChatterPi now runs on:
@@ -19,13 +19,6 @@ Originally developed and tested on Raspberry Pi Model 3 A+, Pi 4, and Pi Zero W.
    - Download the source code
    - Install dependencies using the installation script
    - Configure and run
-
-2. Pre-built Raspberry Pi Image (Raspberry Pi Only):
-   - Download chat.img.gz from [Google Drive](https://drive.google.com/drive/folders/1njfqegJImeXq-ZoW_yuY0TCJ0bTiwWCA?usp=sharing)
-   - Flash to SD card
-   - Boot and run
-
-Note: The pre-built image is only for Raspberry Pi. For Linux and macOS, use the source code installation.
 
 ## Quick Installation
 
@@ -123,6 +116,4 @@ For more detailed information, see:
 - `src/TECHNICAL.md` - Technical details about the code
 - `src/QUICKSTART.md` - Quick start guide
 
-If you use XChatterPi, I'd love to hear about it. Post a comment on my blog: https://www.mcgurrin.info/robots/690/ and consider giving this package a star here on GitHub. Thanks!
-
-Special thanks to Mike McGurrin for the original XChatterPi project that XChatterPi is based on.
+Special thanks to Mike McGurrin for the original ChatterPi project that XChatterPi is based on.
