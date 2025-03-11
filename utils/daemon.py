@@ -37,8 +37,8 @@ def process_wav_file(filepath):
     """
     try:
         # Run main.py with the filepath as an argument
-        result = subprocess.run([sys.executable, "src/main.py", filepath],
-                                capture_output=True, text=True, check=True)
+        result = subprocess.run([sys.executable, "../src/main.py", os.path.abspath(filepath)],
+                                cwd="../src", capture_output=True, text=True, check=True)
         logging.info(f"Successfully processed {filepath}:\n{result.stdout}")
     except subprocess.CalledProcessError as e:
         logging.error(f"Error processing {filepath}:\n{e.stderr}")
