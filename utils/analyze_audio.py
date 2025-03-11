@@ -142,7 +142,7 @@ def main():
     if args.all:
         # Analyze all audio files in vocals and ambient directories
         found_files = False
-        for directory in ['src/vocals', 'src/ambient']:
+        for directory in ['../src/vocals', '../src/ambient']:
             if os.path.exists(directory):
                 files = [f for f in os.listdir(directory) if f.endswith('.wav')]
                 if files:
