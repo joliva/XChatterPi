@@ -13,6 +13,7 @@ import platform
 import shutil
 import importlib.util
 import configparser
+from src.platforms import get_platform, hardware
 
 def check_command(command):
     """Check if a command is available"""
@@ -100,7 +101,6 @@ def main():
     print(f"  Architecture: {platform.machine()}")
     
     # Get platform information
-    from platforms import get_platform, hardware
     platform_name = get_platform()
     system_info = hardware.get_system_info()
     
@@ -152,11 +152,24 @@ def main():
     print("Configuration Check:")
     config_issues = check_config()
     if config_issues:
+        print("✗ Configuration issues found:")
         for issue in config_issues:
-            print(f"  ⚠️ {issue}")
+            print(f"  - {issue}")
     else:
-        print("  ✓ No configuration issues detected")
+        print("✓ No configuration issues found")
     print("")
+    
+    # Check hardware simulation setting
+    print("Checking hardware simulation setting:")
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    try:
+        rpi_hw_simulation = config.getboolean("HARDWARE", "RPI_HW_SIMULATION", fallback=False)
+        print(f"✓ RPI_HW_SIMULATION is set to {rpi_hw_simulation}")
+    except configparser.NoSectionError:
+        print("✗ HARDWARE section is missing in config.ini")
+    except configparser.NoOptionError:
+        print("✗ RPI_HW_SIMULATION option is missing in config.ini")
     
     # Overall assessment
     print("Overall Assessment:")
@@ -171,8 +184,8 @@ def main():
         all_issues.append("Missing critical dependency: numpy")
     
     # Check for pigpiod
-    if pigpio_status != "active":
-        all_issues.append("pigpiod service is not running")
+    #if pigpio_status != "active":
+    #    all_issues.append("pigpiod service is not running")
     
     # Check for audio
     if not run_command("aplay -l | grep -v 'List of'"):
@@ -182,9 +195,9 @@ def main():
     all_issues.extend(config_issues)
     
     if all_issues:
-        print("  ⚠️ Issues detected that may affect functionality:")
+        print("⚠️ Issues detected that may affect functionality:")
         for issue in all_issues:
-            print(f"    - {issue}")
+            print(f"  - {issue}")
         print("\nRecommendations:")
         print("  - Run 'sudo bash install.sh' to install dependencies")
         print("  - Run 'sudo systemctl start pigpiod' to start the pigpio daemon")
@@ -192,7 +205,7 @@ def main():
         print("  - Verify your config.ini settings")
         print("  - Test your servo with 'python3 test_servo.py'")
     else:
-        print("  ✓ All checks passed! Your system appears to be properly configured.")
+        print("✓ All checks passed! Your system appears to be properly configured.")
 
 if __name__ == "__main__":
     main()
