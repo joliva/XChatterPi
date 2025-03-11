@@ -17,6 +17,7 @@ import sys
 BACKUP_DIR = "backups"
 VOCALS_DIR = "src/vocals"
 AMBIENT_DIR = "src/ambient"
+CONFIG_DIR = "src"
 
 def create_backup(include_audio=True, include_config=True):
     """Create a backup of configuration and optionally audio files"""
@@ -34,7 +35,7 @@ def create_backup(include_audio=True, include_config=True):
     try:
         # Copy configuration files if requested
         if include_config:
-            config_paths = ["config.ini"]
+            config_paths = [os.path.join(CONFIG_DIR, "config.ini")]
             config_found = False
             for config_path in config_paths:
                 if os.path.exists(config_path):
@@ -45,7 +46,7 @@ def create_backup(include_audio=True, include_config=True):
             
             if not config_found:
                 # Create a default config file
-                default_config_path = "src/config.ini.default"
+                default_config_path = os.path.join(CONFIG_DIR, "config.ini.default")
                 if os.path.exists(default_config_path):
                     shutil.copy2(default_config_path, os.path.join(temp_dir, "config.ini"))
                     print(f"Created default config.ini from template")
@@ -116,9 +117,11 @@ def restore_backup(backup_file, overwrite=False):
         
         # Restore configuration file
         config_path = os.path.join(temp_dir, "config.ini")
+        dest_config_path = os.path.join(CONFIG_DIR, "config.ini")
         if os.path.exists(config_path):
-            if overwrite or not os.path.exists("config.ini"):
-                shutil.copy2(config_path, "config.ini")
+            if overwrite or not os.path.exists(dest_config_path):
+                os.makedirs(CONFIG_DIR, exist_ok=True)
+                shutil.copy2(config_path, dest_config_path)
                 print("Configuration restored")
             else:
                 print("Skipped config.ini (use --overwrite to replace)")
