@@ -13,7 +13,10 @@ import platform
 import shutil
 import importlib.util
 import configparser
-from src.platforms import get_platform, hardware
+
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent)+"/src")
+from platforms import get_platform, hardware
 
 def check_command(command):
     """Check if a command is available"""
@@ -51,13 +54,13 @@ def check_config():
     """Check the configuration file for potential issues"""
     issues = []
     
-    if not check_file("config.ini"):
+    if not check_file("../src/config.ini"):
         issues.append("config.ini file not found")
         return issues
     
     try:
         config = configparser.ConfigParser()
-        config.read("config.ini")
+        config.read("../src/config.ini")
         
         # Check for invalid combinations
         if config.get("AUDIO", "SOURCE") == "FILES" and config.get("PROP", "PROP_TRIGGER") == "START":
@@ -141,11 +144,11 @@ def main():
     
     # Check files and directories
     print("Files and Directories:")
-    print(f"  config.ini: {'Found' if check_file('config.ini') else 'Missing'}")
-    print(f"  vocals directory: {'Found' if check_directory('vocals') else 'Missing'}")
-    print(f"  ambient directory: {'Found' if check_directory('ambient') else 'Missing'}")
-    print(f"  Vocal files: {count_files('vocals')}")
-    print(f"  Ambient files: {count_files('ambient')}")
+    print(f"  config.ini: {'Found' if check_file('../src/config.ini') else 'Missing'}")
+    print(f"  vocals directory: {'Found' if check_directory('../src/vocals') else 'Missing'}")
+    print(f"  ambient directory: {'Found' if check_directory('../src/ambient') else 'Missing'}")
+    print(f"  Vocal files: {count_files('../src/vocals')}")
+    print(f"  Ambient files: {count_files('../src/ambient')}")
     print("")
     
     # Check configuration
@@ -162,7 +165,7 @@ def main():
     # Check hardware simulation setting
     print("Checking hardware simulation setting:")
     config = configparser.ConfigParser()
-    config.read('config.ini')
+    config.read('../src/config.ini')
     try:
         rpi_hw_simulation = config.getboolean("HARDWARE", "RPI_HW_SIMULATION", fallback=False)
         print(f"✓ RPI_HW_SIMULATION is set to {rpi_hw_simulation}")
