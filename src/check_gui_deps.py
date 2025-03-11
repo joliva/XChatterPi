@@ -10,7 +10,7 @@ import importlib.util
 import sys
 import subprocess
 import platform
-from platforms import get_platform
+from src.platforms import get_platform
 
 def check_module(module_name):
     """Check if a Python module is installed"""
