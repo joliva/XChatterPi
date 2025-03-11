@@ -15,11 +15,11 @@ from platforms import get_platform
 def check_dependencies():
     """Check if all required dependencies are installed"""
     # First check if we have the dependency checker
-    if os.path.exists("check_gui_deps.py"):
+    if os.path.exists("utils/check_gui_deps.py"):
         try:
             # Run the dependency checker
             result = subprocess.run(
-                [sys.executable, "check_gui_deps.py"],
+                [sys.executable, "utils/check_gui_deps.py"],
                 capture_output=True,
                 text=True,
                 check=False
