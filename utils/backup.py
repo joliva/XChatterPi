@@ -15,6 +15,8 @@ import glob
 import sys
 
 BACKUP_DIR = "backups"
+VOCALS_DIR = "src/vocals"
+AMBIENT_DIR = "src/ambient"
 
 def create_backup(include_audio=True, include_config=True):
     """Create a backup of configuration and optionally audio files"""
@@ -57,7 +59,7 @@ def create_backup(include_audio=True, include_config=True):
             os.makedirs(os.path.join(temp_dir, "ambient"), exist_ok=True)
             
             # Copy vocal files
-            vocal_files = glob.glob("vocals/*.wav")
+            vocal_files = glob.glob(os.path.join(VOCALS_DIR, "*.wav"))
             if vocal_files:
                 for file in vocal_files:
                     shutil.copy2(file, os.path.join(temp_dir, "vocals"))
@@ -66,7 +68,7 @@ def create_backup(include_audio=True, include_config=True):
                 print("No vocal files found")
             
             # Copy ambient files
-            ambient_files = glob.glob("ambient/*.wav")
+            ambient_files = glob.glob(os.path.join(AMBIENT_DIR, "*.wav"))
             if ambient_files:
                 for file in ambient_files:
                     shutil.copy2(file, os.path.join(temp_dir, "ambient"))
@@ -124,22 +126,24 @@ def restore_backup(backup_file, overwrite=False):
         # Restore audio files
         vocals_dir = os.path.join(temp_dir, "vocals")
         if os.path.exists(vocals_dir):
-            os.makedirs("vocals", exist_ok=True)
+            os.makedirs(VOCALS_DIR, exist_ok=True)
             for file in glob.glob(os.path.join(vocals_dir, "*.wav")):
                 filename = os.path.basename(file)
-                if overwrite or not os.path.exists(os.path.join("vocals", filename)):
-                    shutil.copy2(file, os.path.join("vocals", filename))
+                dest_path = os.path.join(VOCALS_DIR, filename)
+                if overwrite or not os.path.exists(dest_path):
+                    shutil.copy2(file, dest_path)
                     print(f"Restored: vocals/{filename}")
                 else:
                     print(f"Skipped: vocals/{filename} (use --overwrite to replace)")
         
         ambient_dir = os.path.join(temp_dir, "ambient")
         if os.path.exists(ambient_dir):
-            os.makedirs("ambient", exist_ok=True)
+            os.makedirs(AMBIENT_DIR, exist_ok=True)
             for file in glob.glob(os.path.join(ambient_dir, "*.wav")):
                 filename = os.path.basename(file)
-                if overwrite or not os.path.exists(os.path.join("ambient", filename)):
-                    shutil.copy2(file, os.path.join("ambient", filename))
+                dest_path = os.path.join(AMBIENT_DIR, filename)
+                if overwrite or not os.path.exists(dest_path):
+                    shutil.copy2(file, dest_path)
                     print(f"Restored: ambient/{filename}")
                 else:
                     print(f"Skipped: ambient/{filename} (use --overwrite to replace)")
