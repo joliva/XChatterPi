@@ -14,8 +14,7 @@ import shutil
 import importlib.util
 import configparser
 
-from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parent.parent)+"/src")
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+"/src")
 from platforms import get_platform, hardware
 
 def check_command(command):

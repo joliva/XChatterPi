@@ -14,7 +14,7 @@ import importlib.util
 import configparser
 
 # Add the src directory to the path to find the config and platforms modules
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+"/src")
 
 import src.config as c
 from src.platforms import hardware
@@ -22,8 +22,8 @@ from src.platforms import hardware
 def test_servo(mode="sweep", speed=1.0, min_angle=None, max_angle=None, servo_min=None, servo_max=None, pin=None):
     """Test the servo with different patterns"""
     # Check if config.ini exists, if not create it from default
-    config_path = 'config.ini'
-    default_config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.ini.default')
+    config_path = '../src/config.ini'
+    default_config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../src/config.ini.default')
     
     if not os.path.exists(config_path) and os.path.exists(default_config_path):
         print(f"config.ini not found, creating from default template")
