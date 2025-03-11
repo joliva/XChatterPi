@@ -16,7 +16,7 @@ import sys
 
 # Add the src directory to the path to find the bandpassFilter module
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from bandpassFilter import BPFilter
+from utils.bandpassFilter import BPFilter
 
 def analyze_audio(filename, filtered=False):
     """Analyze an audio file and display statistics and visualization"""
