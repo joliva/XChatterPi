@@ -14,10 +14,10 @@ import zipfile
 import glob
 import sys
 
-BACKUP_DIR = "backups"
-VOCALS_DIR = "src/vocals"
-AMBIENT_DIR = "src/ambient"
-CONFIG_DIR = "src"
+BACKUP_DIR = "../backups"
+VOCALS_DIR = "../src/vocals"
+AMBIENT_DIR = "../src/ambient"
+CONFIG_DIR = "../src"
 
 def create_backup(include_audio=True, include_config=True):
     """Create a backup of configuration and optionally audio files"""
