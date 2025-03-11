@@ -9,13 +9,13 @@ import time
 import pyaudio
 import atexit
 import numpy as np
-from bandpassFilter import BPFilter
+from utils.bandpassFilter import BPFilter
 import config as c
 import control
 from platforms import hardware
 
 try:
-    import custom_servo_handler as csh
+    import utils.custom_servo_handler as csh
 except ImportError:
     csh = None
 
@@ -47,7 +47,7 @@ class AUDIO:
             self.j_max = c.MAX_ANGLE
         else:
             self.j_min = c.MAX_ANGLE
-            self.j_max = c.MIN_ANGLE          
+            self.j_max = self.MIN_ANGLE          
         
     def update_jaw(self):
         # Create servo using platform hardware abstraction
@@ -65,7 +65,7 @@ class AUDIO:
             self.j_max = c.MAX_ANGLE
         else:
             self.j_min = c.MAX_ANGLE
-            self.j_max = c.MIN_ANGLE    
+            self.j_max = self.MIN_ANGLE    
            
     def play_vocal_track(self, filename=None):
         # Used for both threshold (Scary Terry style) and multi-level (jawduino style)
@@ -265,8 +265,3 @@ class AUDIO:
                     
         except (KeyboardInterrupt, SystemExit):
             cleanup()
-
-   
-        
-
-            
