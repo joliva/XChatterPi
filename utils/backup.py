@@ -136,6 +136,7 @@ def restore_backup(backup_file, overwrite=False):
                 else:
                     print(f"Skipped: vocals/{filename} (use --overwrite to replace)")
         
+        # Restore audio files
         ambient_dir = os.path.join(temp_dir, "ambient")
         if os.path.exists(ambient_dir):
             os.makedirs(AMBIENT_DIR, exist_ok=True)
@@ -147,7 +148,7 @@ def restore_backup(backup_file, overwrite=False):
                     print(f"Restored: ambient/{filename}")
                 else:
                     print(f"Skipped: ambient/{filename} (use --overwrite to replace)")
-        
+
         print("Restore completed successfully")
         return True
     
