@@ -4,8 +4,7 @@
 Basic Audio Analysis Tool for Chatter Pi
 
 This utility analyzes audio files to help with configuring
-threshold levels for jaw movement. This is a simplified version
-that doesn't require scipy.
+threshold levels for jaw movement. This version does not require scipy.
 """
 
 import wave
@@ -13,6 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import argparse
 import os
+import sys
 
 def analyze_audio(filename):
     """Analyze an audio file and display statistics and visualization"""
@@ -63,7 +63,6 @@ def analyze_audio(filename):
         print(f"Maximum Volume: {max_volume}")
         print(f"Average Volume: {avg_volume:.2f}")
         print(f"\nRecommended Threshold Levels:")
-        
         print("For STYLE=0 (Threshold):")
         print(f"THRESHOLD: {int(p50)}")
         print("\nFor STYLE=1 (Multi-level):")
@@ -115,7 +114,7 @@ def analyze_audio(filename):
         print(f"Error analyzing file: {e}")
 
 def main():
-    parser = argparse.ArgumentParser(description='Basic Audio Analysis Tool for Chatter Pi (no scipy required)')
+    parser = argparse.ArgumentParser(description='Analyze audio files for Chatter Pi')
     parser.add_argument('filename', help='Audio file to analyze', nargs='?')
     parser.add_argument('-a', '--all', action='store_true',
                         help='Analyze all audio files in vocals and ambient directories')
@@ -125,7 +124,7 @@ def main():
     if args.all:
         # Analyze all audio files in vocals and ambient directories
         found_files = False
-        for directory in ['vocals', 'ambient']:
+        for directory in ['src/vocals', 'src/ambient']:
             if os.path.exists(directory):
                 files = [f for f in os.listdir(directory) if f.endswith('.wav')]
                 if files:
@@ -136,13 +135,13 @@ def main():
                         analyze_audio(filepath)
         
         if not found_files:
-            print("No .wav files found in vocals/ or ambient/ directories.")
+            print("No .wav files found in src/vocals/ or src/ambient/ directories.")
             print("Please create these directories and add .wav files to them.")
             print("\nExample directory structure:")
-            print("  vocals/")
+            print("  src/vocals/")
             print("    v01.wav")
             print("    v02.wav")
-            print("  ambient/")
+            print("  src/ambient/")
             print("    a01.wav")
     elif args.filename:
         # Analyze single file

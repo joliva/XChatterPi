@@ -142,7 +142,7 @@ def main():
     if args.all:
         # Analyze all audio files in vocals and ambient directories
         found_files = False
-        for directory in ['vocals', 'ambient']:
+        for directory in ['src/vocals', 'src/ambient']:
             if os.path.exists(directory):
                 files = [f for f in os.listdir(directory) if f.endswith('.wav')]
                 if files:
@@ -153,13 +153,13 @@ def main():
                         analyze_audio(filepath, args.filtered)
         
         if not found_files:
-            print("No .wav files found in vocals/ or ambient/ directories.")
+            print("No .wav files found in src/vocals/ or src/ambient/ directories.")
             print("Please create these directories and add .wav files to them.")
             print("\nExample directory structure:")
-            print("  vocals/")
+            print("  src/vocals/")
             print("    v01.wav")
             print("    v02.wav")
-            print("  ambient/")
+            print("  src/ambient/")
             print("    a01.wav")
     elif args.filename:
         # Analyze single file
