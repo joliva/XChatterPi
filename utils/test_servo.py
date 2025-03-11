@@ -16,8 +16,8 @@ import configparser
 # Add the src directory to the path to find the config and platforms modules
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-import config as c
-from platforms import hardware
+import src.config as c
+from src.platforms import hardware
 
 def test_servo(mode="sweep", speed=1.0, min_angle=None, max_angle=None, servo_min=None, servo_max=None, pin=None):
     """Test the servo with different patterns"""
