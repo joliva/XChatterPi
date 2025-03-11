@@ -9,13 +9,13 @@ import time
 import pyaudio
 import atexit
 import numpy as np
-from utils.bandpassFilter import BPFilter
+from bandpassFilter import BPFilter
 import config as c
 import control
 from platforms import hardware
 
 try:
-    import utils.custom_servo_handler as csh
+    import custom_servo_handler as csh
 except ImportError:
     csh = None
 
@@ -47,7 +47,7 @@ class AUDIO:
             self.j_max = c.MAX_ANGLE
         else:
             self.j_min = c.MAX_ANGLE
-            self.j_max = self.MIN_ANGLE          
+            self.j_max = c.MIN_ANGLE          
         
     def update_jaw(self):
         # Create servo using platform hardware abstraction
