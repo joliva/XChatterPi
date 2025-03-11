@@ -63,12 +63,16 @@ def watch_directory(directory):
     observer.join()
 
 def main():
-    # Load configuration
-    config = configparser.ConfigParser()
-    config.read('config.ini')
+    # Check if a directory argument was provided
+    if len(sys.argv) < 2:
+        print("Usage: daemon.py <directory_to_watch>")
+        sys.exit(1)
     
-    # Get the directory to watch from the configuration
-    watch_dir = config.get('DAEMON', 'watch_directory', fallback='.')
+    watch_dir = sys.argv[1]
+    
+    if not os.path.isdir(watch_dir):
+        print(f"Error: {watch_dir} is not a valid directory")
+        sys.exit(1)
     
     # Start watching the directory
     watch_directory(watch_dir)
