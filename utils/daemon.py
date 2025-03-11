@@ -1,72 +1,74 @@
-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Daemon process that watches a directory for .wav files and processes them through main.py
 """
 
+import time
 import os
 import sys
-import time
+import logging
 import subprocess
-import signal
+import configparser
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
+# Setup logging
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
+
+class WavFileHandler(FileSystemEventHandler):
+    """
+    Handles file system events, specifically for .wav files.
+    """
+    def on_created(self, event):
+        if event.is_directory:
+            return None
+        
+        filepath = event.src_path
+        if filepath.endswith('.wav'):
+            logging.info(f"New WAV file detected: {filepath}")
+            process_wav_file(filepath)
 
 def process_wav_file(filepath):
-    """Process a wav file through main.py and delete it afterwards"""
+    """
+    Processes a .wav file using main.py.
+    """
     try:
-        # Run main.py with the wav file
-        result = subprocess.run(['python3', 'main.py', filepath], check=True)
-        
-        # If main.py completed successfully, delete the file
-        if result.returncode == 0:
-            os.remove(filepath)
-            print(f"Processed and removed: {filepath}")
-        else:
-            print(f"Error processing file: {filepath}")
-            
+        # Run main.py with the filepath as an argument
+        result = subprocess.run([sys.executable, "src/main.py", filepath],
+                                capture_output=True, text=True, check=True)
+        logging.info(f"Successfully processed {filepath}:\n{result.stdout}")
     except subprocess.CalledProcessError as e:
-        print(f"Error running main.py: {e}")
+        logging.error(f"Error processing {filepath}:\n{e.stderr}")
     except Exception as e:
-        print(f"Error: {e}")
+        logging.error(f"Unexpected error processing {filepath}:\n{str(e)}")
 
 def watch_directory(directory):
-    """Watch a directory for .wav files and process them"""
-    print(f"Watching directory: {directory}")
+    """
+    Watches the specified directory for new .wav files.
+    """
+    event_handler = WavFileHandler()
+    observer = Observer()
+    observer.schedule(event_handler, directory, recursive=False)
+    observer.start()
+    logging.info(f"Watching directory: {directory}")
     
-    # Handle graceful shutdown
-    def signal_handler(signum, frame):
-        print("\nShutting down daemon...")
-        sys.exit(0)
-    
-    signal.signal(signal.SIGINT, signal_handler)
-    signal.signal(signal.SIGTERM, signal_handler)
-    
-    while True:
-        try:
-            # Look for .wav files in the directory
-            for filename in os.listdir(directory):
-                if filename.endswith('.wav'):
-                    filepath = os.path.join(directory, filename)
-                    print(f"Found wav file: {filepath}")
-                    process_wav_file(filepath)
-            
-            # Wait before checking again
+    try:
+        while True:
             time.sleep(1)
-            
-        except Exception as e:
-            print(f"Error scanning directory: {e}")
-            sys.exit(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
 
 def main():
-    # Check command line arguments
-    if len(sys.argv) != 2:
-        print("Usage: python3 daemon.py <watch_directory>")
-        sys.exit(1)
+    # Load configuration
+    config = configparser.ConfigParser()
+    config.read('config.ini')
     
-    watch_dir = sys.argv[1]
-    
-    # Verify directory exists
-    if not os.path.isdir(watch_dir):
-        print(f"Error: Directory does not exist: {watch_dir}")
-        sys.exit(1)
+    # Get the directory to watch from the configuration
+    watch_dir = config.get('DAEMON', 'watch_directory', fallback='.')
     
     # Start watching the directory
     watch_directory(watch_dir)
