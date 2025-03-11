@@ -36,7 +36,7 @@ def create_backup(include_audio=True, include_config=True):
             
             if not config_found:
                 # Create a default config file
-                default_config_path = "config.ini.default"
+                default_config_path = "src/config.ini.default"
                 if os.path.exists(default_config_path):
                     shutil.copy2(default_config_path, os.path.join(backup_dir, "config.ini"))
                     print(f"Created default config.ini from template")
