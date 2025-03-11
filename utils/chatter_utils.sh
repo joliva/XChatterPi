@@ -20,11 +20,10 @@ show_help() {
     echo "  list-backups       - List available backups"
     echo "  audio-devices      - List audio devices"
     echo "  test-audio         - Test audio recording/playback"
-    echo "  control-panel      - Launch control panel"
     echo "  help               - Show this help"
     echo ""
     echo "Examples:"
-    echo "  $0 analyze vocals/v01.wav"
+    echo "  $0 analyze ../src/vocals/v01.wav"
     echo "  $0 analyze --all"
     echo "  $0 test-servo --mode steps"
     echo "  $0 backup"
@@ -77,14 +76,11 @@ case "$1" in
         ;;
     audio-devices)
         shift
-        python3 "$SCRIPT_DIR/audio_devices.py" list "$@"
+        python3 "$SCRIPT_DIR/../src/audio_devices.py" list "$@"
         ;;
     test-audio)
         shift
-        python3 "$SCRIPT_DIR/audio_devices.py" test "$@"
-        ;;
-    control-panel)
-        python3 "$SCRIPT_DIR/run_control_panel.py"
+        python3 "$SCRIPT_DIR/../src/audio_devices.py" test "$@"
         ;;
     help)
         show_help
