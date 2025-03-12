@@ -2,7 +2,7 @@
 
 ## Overview
 
-`audio_recorder.py` is a Python script that records audio from a microphone using Voice Activity Detection (VAD). It leverages the `pvrecorder`, `webrtcvad`, and `pydub` libraries to detect speech, record audio segments, and save the recorded audio to a file in either WAV or MP3 format.
+`audio_recorder.py` is a Python script that records audio from a microphone using Voice Activity Detection (VAD). It leverages the `pvrecorder`, `webrtcvad`, `pydub`, and `paramiko` libraries to detect speech, record audio segments, and save the recorded audio to a file in either WAV or MP3 format, with optional remote file transfer capabilities.
 
 ## Functionality
 
@@ -13,6 +13,7 @@ The script provides the following functionality:
 -   **Audio Recording:** Employs the `PvRecorder` library to capture audio from the microphone. The `PvRecorder` provides a simple interface for accessing audio input devices and recording audio data.
 -   **File Format Support:** Saves the recorded audio to a file in either WAV or MP3 format. The `pydub` library is used to convert the audio to MP3 format if specified.
 -   **Command-Line Interface:** Provides a comprehensive command-line interface for specifying the output file name, format, device index, and VAD sensitivity level.
+-   **Remote File Transfer:** Supports uploading recorded audio files to a remote server via SFTP using the `paramiko` library.
 
 ## Design
 
@@ -41,8 +42,10 @@ The script's design can be broken down into the following steps:
         -   The temporary WAV file is then converted to MP3 using `pydub`.
     -   If the specified format is WAV:
         -   The audio buffer is saved directly to a WAV file.
+    -   If remote saving is enabled:
+        -   The file is uploaded to a remote server using SFTP via the `paramiko` library.
 
-## Function: `record_with_vad(filename, file_format, device_index=-1, sample_rate=16000, frame_duration_ms=30, vad_aggressiveness=3)`
+## Function: `record_with_vad(filename, file_format, device_index=-1, sample_rate=16000, frame_duration_ms=30, vad_aggressiveness=3, remote_save=False)`
 
 This function is the core of the `audio_recorder.py` script. It encapsulates the entire process of recording audio with VAD and saving it to a file.
 
@@ -58,6 +61,7 @@ This function is the core of the `audio_recorder.py` script. It encapsulates the
     - Level 1: Moderately aggressive
     - Level 2: More aggressive
     - Level 3: Most aggressive (less likely to detect background noise as speech)
+-   `remote_save` (bool, optional): Whether to save the file to a remote host. Defaults to False.
 
 **Returns:**
 
@@ -71,6 +75,7 @@ The script provides a command-line interface with the following arguments:
 -   `--format {wav,mp3}`: Output file format (defaults to "wav")
 -   `--device DEVICE`: Audio device index (defaults to -1, system default)
 -   `--vad-level {0,1,2,3}`: VAD aggressiveness level (defaults to 3)
+-   `--remote`: Upload the recorded file to a remote server via SFTP
 -   `--help`: Show detailed help information and exit
 
 **Usage Examples:**
@@ -100,7 +105,12 @@ The script provides a command-line interface with the following arguments:
    python audio_recorder.py --vad-level 1
    ```
 
-6. Display detailed help information:
+6. Save the recording to a remote server:
+   ```
+   python audio_recorder.py --remote
+   ```
+
+7. Display detailed help information:
    ```
    python audio_recorder.py --help
    ```
@@ -109,3 +119,20 @@ To list available audio devices, you can use:
 ```
 python -c "from pvrecorder import PvRecorder; print(PvRecorder.get_audio_devices())"
 ```
+
+## Remote File Transfer Configuration
+
+The script uses a configuration file `audio_recorder.conf` for SFTP settings. If the file doesn't exist when the `--remote` option is used, a template will be created automatically.
+
+Example configuration:
+```
+[SFTP]
+hostname = your_server_ip
+port = 22
+username = your_username
+password = your_password
+# key_file = /path/to/your/private_key
+remote_dir = /path/to/remote/directory
+```
+
+The configuration supports both password-based and key-based authentication methods.

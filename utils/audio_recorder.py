@@ -1,12 +1,15 @@
 import argparse
+import configparser
+import os
 from pvrecorder import PvRecorder
 import webrtcvad
 import wave
 import struct
 import numpy as np
 from pydub import AudioSegment
+import paramiko
 
-def record_with_vad(filename, file_format, device_index=-1, sample_rate=16000, frame_duration_ms=30, vad_aggressiveness=3):
+def record_with_vad(filename, file_format, device_index=-1, sample_rate=16000, frame_duration_ms=30, vad_aggressiveness=3, remote_save=False):
     """
     Records audio using Voice Activity Detection (VAD) to automatically stop recording when speech ends.
 
@@ -21,6 +24,7 @@ def record_with_vad(filename, file_format, device_index=-1, sample_rate=16000, f
             - Level 1: Moderately aggressive
             - Level 2: More aggressive
             - Level 3: Most aggressive (less likely to detect background noise as speech)
+        remote_save (bool, optional): Whether to save the file to a remote host. Defaults to False.
 
     Usage Examples:
         1. Record audio and save it as a WAV file:
@@ -34,6 +38,9 @@ def record_with_vad(filename, file_format, device_index=-1, sample_rate=16000, f
 
         4. Use a lower VAD aggressiveness level (e.g., level 1):
            python audio_recorder.py output.wav --vad-level 1
+           
+        5. Save the file to a remote host:
+           python audio_recorder.py output.wav --remote
 
     Note: Use `PvRecorder.get_audio_devices()` to list available device indices.
     """
@@ -100,14 +107,102 @@ def record_with_vad(filename, file_format, device_index=-1, sample_rate=16000, f
         if file_format == 'mp3':
             audio = AudioSegment.from_wav(temp_wav)
             audio.export(filename, format="mp3")
-            print(f"Audio saved to {filename}")
+            print(f"Audio saved locally to {filename}")
         else:
             # If the desired format is WAV, rename the temporary WAV file to the output file.
             import os
             os.rename(temp_wav, filename)
-            print(f"Audio saved to {filename}")
+            print(f"Audio saved locally to {filename}")
+            
+        # If remote_save is enabled, upload the file to the remote server
+        if remote_save:
+            upload_to_remote(filename)
     else:
         print("No speech detected, no file saved.")
+
+def upload_to_remote(local_file):
+    """
+    Uploads a file to a remote server using SFTP.
+    
+    Args:
+        local_file (str): The path to the local file to upload.
+    """
+    # Read configuration from file
+    config = configparser.ConfigParser()
+    config_file = 'audio_recorder.conf'
+    
+    if not os.path.exists(config_file):
+        print(f"Error: Configuration file '{config_file}' not found.")
+        print("Creating a template configuration file. Please edit it with your server details.")
+        create_config_template()
+        return
+    
+    config.read(config_file)
+    
+    if 'SFTP' not in config:
+        print("Error: SFTP section missing in configuration file.")
+        print("Creating a template configuration file. Please edit it with your server details.")
+        create_config_template()
+        return
+    
+    try:
+        hostname = config['SFTP']['hostname']
+        port = int(config['SFTP'].get('port', '22'))
+        username = config['SFTP']['username']
+        password = config['SFTP'].get('password', '')
+        key_file = config['SFTP'].get('key_file', '')
+        remote_dir = config['SFTP'].get('remote_dir', '.')
+        
+        # Create the remote file path
+        remote_file = os.path.join(remote_dir, os.path.basename(local_file))
+        
+        # Connect to the server
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        
+        # Connect using either password or key file
+        if key_file:
+            ssh.connect(hostname, port=port, username=username, key_filename=key_file)
+        else:
+            ssh.connect(hostname, port=port, username=username, password=password)
+        
+        # Upload the file
+        sftp = ssh.open_sftp()
+        sftp.put(local_file, remote_file)
+        
+        print(f"File uploaded to remote server: {remote_file}")
+
+        # Remove the local file after successful upload
+        os.remove(local_file)
+        print(f"Local file removed: {local_file}")
+
+        # Close connections
+        sftp.close()
+        ssh.close()
+        
+    except KeyError as e:
+        print(f"Error: Missing configuration parameter: {e}")
+    except Exception as e:
+        print(f"Error uploading file to remote server: {e}")
+
+def create_config_template():
+    """
+    Creates a template configuration file for SFTP settings.
+    """
+    config = configparser.ConfigParser()
+    
+    config['SFTP'] = {
+        'hostname': 'your_server_ip',
+        'port': '22',
+        'username': 'your_username',
+        'password': 'your_password',
+        # Uncomment and set if using key-based authentication
+        # 'key_file': '/path/to/your/private_key',
+        'remote_dir': '.'  # Remote directory to save files
+    }
+    
+    with open('audio_recorder.conf', 'w') as configfile:
+        config.write(configfile)
 
 def print_detailed_help():
     """Prints detailed help information about the script."""
@@ -122,31 +217,49 @@ DEPENDENCIES:
   - webrtcvad: For voice activity detection
   - pydub: For audio format conversion
   - numpy: For audio processing
+  - paramiko: For SFTP file transfer
 
 COMMAND LINE ARGUMENTS:
-  output                    Output file name
+  output                    Output file name (optional, defaults to "output")
   --format {wav,mp3}        Output file format (default: wav)
   --device DEVICE           Audio device index (default: -1, system default)
   --vad-level {0,1,2,3}     VAD aggressiveness level (default: 3)
                             0: Least aggressive (more sensitive to background noise)
                             3: Most aggressive (less sensitive to background noise)
-  --detailed-help           Show this detailed help message and exit
+  --remote                  Upload the recorded file to a remote server via SFTP
+  --help                    Show this detailed help message and exit
 
 EXAMPLES:
   1. Basic recording to WAV:
-     python audio_recorder.py output.wav
+     python audio_recorder.py
 
   2. Recording to MP3:
-     python audio_recorder.py output.mp3 --format mp3
+     python audio_recorder.py --format mp3
 
   3. Using a specific audio device:
-     python audio_recorder.py output.wav --device 1
+     python audio_recorder.py --device 1
 
   4. Adjusting VAD sensitivity:
-     python audio_recorder.py output.wav --vad-level 1
+     python audio_recorder.py --vad-level 1
+     
+  5. Upload to remote server:
+     python audio_recorder.py --remote
 
-  5. List available audio devices:
+  6. List available audio devices:
      python -c "from pvrecorder import PvRecorder; print(PvRecorder.get_audio_devices())"
+
+REMOTE UPLOAD CONFIGURATION:
+  The script uses a configuration file 'audio_recorder.conf' for SFTP settings.
+  If the file doesn't exist, a template will be created when you first use the --remote option.
+  
+  Example configuration:
+  [SFTP]
+  hostname = your_server_ip
+  port = 22
+  username = your_username
+  password = your_password
+  # key_file = /path/to/your/private_key
+  remote_dir = /path/to/remote/directory
 
 BEHAVIOR:
   - The script starts listening immediately when run
@@ -157,6 +270,7 @@ BEHAVIOR:
 OUTPUT:
   - The recorded audio is saved to the specified file
   - If no speech is detected, no file is saved
+  - If --remote is specified, the file is also uploaded to the remote server
     """
     print(help_text)
 
@@ -166,16 +280,17 @@ if __name__ == "__main__":
     parser.add_argument("output", nargs='?', default="output", help="Output file name (default: output)")
     parser.add_argument("--format", choices=["wav", "mp3"], default="wav", help="Output file format (default: wav)")
     parser.add_argument("--device", type=int, default=-1, help="Audio device index (default: -1, system default)")
-    parser.add_argument("--vad-level", type=int, choices=[0, 1, 2, 3], default=3,
+    parser.add_argument("--vad-level", type=int, choices=[0, 1, 2, 3], default=3, 
                         help="VAD aggressiveness level (0-3, where 0 is least aggressive and 3 is most aggressive)")
+    parser.add_argument("--remote", action="store_true", help="Upload the recorded file to a remote server via SFTP")
     parser.add_argument("--help", action="store_true", help="Show detailed help information and exit")
-
+    
     args = parser.parse_args()
-
+    
     if args.help:
         print_detailed_help()
         exit(0)
-
+        
     output_file = args.output
 
     # Ensure the output file has the correct extension.
@@ -183,5 +298,5 @@ if __name__ == "__main__":
         output_file += f".{args.format}"
 
     # Call the record_with_vad function with the specified parameters.
-    record_with_vad(output_file, args.format, device_index=args.device, vad_aggressiveness=args.vad_level)
+    record_with_vad(output_file, args.format, device_index=args.device, vad_aggressiveness=args.vad_level, remote_save=args.remote)
 
