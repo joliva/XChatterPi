@@ -85,11 +85,25 @@ class PlatformHardware(HardwareBase):
         """Initialize Raspberry Pi hardware"""
         self.pin_factory = None
         self.simulation_mode = c.RPI_HW_SIMULATION
+        self.pi_version = self._get_pi_version()
+
+    def _get_pi_version(self):
+        """Check Raspberry Pi version from /proc/device-tree/model"""
+        try:
+            with open("/proc/device-tree/model", "r") as f:
+                model = f.read().lower()
+                if "raspberry pi 5" in model:
+                    return 5
+                return 0
+        except Exception:
+            return 0
         
     def setup(self):
         """Initialize hardware components"""
         if not self.simulation_mode:
             try:
+                if self.pi_version >= 5:
+                    self._check_pigpio_version(min_version="79")
                 self.pin_factory = PiGPIOFactory()
                 Device.pin_factory = self.pin_factory
             except Exception as e:
@@ -142,9 +156,26 @@ class PlatformHardware(HardwareBase):
         except Exception:
             return False
     
+    def _check_pigpio_version(self, min_version):
+        """Check if pigpio version meets minimum requirement"""
+        try:
+            result = subprocess.run(
+                ["pigpiod", "-v"],
+                capture_output=True,
+                text=True,
+                check=False
+            )
+            version = result.stdout.strip()
+            if version < min_version:
+                raise RuntimeError(f"pigpio version {version} is too old, minimum required is {min_version}")
+        except Exception as e:
+            raise RuntimeError(f"Failed to check pigpio version: {e}")
+
     def get_system_info(self):
         """Get Raspberry Pi system information"""
-        info = {}
+        info = {
+            "pi_version": self.pi_version if self.pi_version else "Unknown"
+        }
         
         # Get temperature
         try:
