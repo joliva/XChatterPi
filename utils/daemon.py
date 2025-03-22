@@ -39,6 +39,8 @@ def process_wav_file(filepath):
         # Run main.py with the filepath as an argument
         result = subprocess.run([sys.executable, "../src/main.py", os.path.abspath(filepath)],
                                 cwd="../src", capture_output=True, text=True, check=True)
+        print(result.stdout)
+
         logging.info(f"Successfully processed {filepath}")
         
         # Remove the file after processing
