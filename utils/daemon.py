@@ -33,13 +33,17 @@ class WavFileHandler(FileSystemEventHandler):
 
 def process_wav_file(filepath):
     """
-    Processes a .wav file using main.py.
+    Processes a .wav file using main.py and then removes it.
     """
     try:
         # Run main.py with the filepath as an argument
         result = subprocess.run([sys.executable, "../src/main.py", os.path.abspath(filepath)],
                                 cwd="../src", capture_output=True, text=True, check=True)
-        logging.info(f"Successfully processed {filepath}:\n{result.stdout}")
+        logging.info(f"Successfully processed {filepath}")
+        
+        # Remove the file after processing
+        os.remove(filepath)
+        logging.info(f"Removed processed file: {filepath}")
     except subprocess.CalledProcessError as e:
         logging.error(f"Error processing {filepath}:\n{e.stderr}")
     except Exception as e:
@@ -55,12 +59,21 @@ def watch_directory(directory):
     observer.start()
     logging.info(f"Watching directory: {directory}")
     
+    # Process any existing .wav files in the directory
+    for filename in os.listdir(directory):
+        if filename.endswith('.wav'):
+            filepath = os.path.join(directory, filename)
+            logging.info(f"Found existing WAV file: {filepath}")
+            process_wav_file(filepath)
+    
     try:
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
-    observer.join()
+        logging.info("Stopping directory watch")
+    finally:
+        observer.join()
 
 def main():
     # Check if a directory argument was provided
